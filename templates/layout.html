@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <meta name="robots" content="{{ROBOTS}}">
+  <link rel="canonical" href="{{CANONICAL}}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="{{DESCRIPTION}}">
+  <meta property="og:url" content="{{CANONICAL}}">
+  <meta property="og:locale" content="pt_BR">
+
+  <link rel="preload" href="/assets/fonts/manrope-variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/assets/story-style.css">
+  {{EXTRA_ASSETS}}
+  <script type="module" src="/script.js"></script>
+  <script src="/assets/motion.js" defer></script>
+</head>
+<body class="{{BODY_CLASS}}">
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header section-shell">
+    <a class="brand" href="/" aria-label="Além do Consumo — O Projeto"><span>além do consumo<span class="brand-dot">.</span><small>EDUCAÇÃO SOCIOAMBIENTAL</small></span></a>
+    <nav aria-label="Navegação principal">{{NAV}}</nav>
+  </header>
+  <main id="conteudo" class="site-main">{{CONTENT}}</main>
+  <footer class="screen-footer section-shell"><span>Independente. Gratuito. Aberto a todos.</span><button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">Pausar animações</button><button type="button" class="footer-link" data-open-dialog="project-dialog">Sobre a iniciativa <span aria-hidden="true">↗</span></button></footer>
+  <dialog id="project-dialog" aria-labelledby="project-dialog-title"><button type="button" class="dialog-close" data-close-dialog aria-label="Fechar">×</button><p class="eyebrow">O PROJETO</p><h2 id="project-dialog-title">Além do Consumo</h2><div class="reading-body"><p>Uma iniciativa independente de educação socioambiental, iniciada como atividade de extensão universitária e planejada para continuar como um projeto educativo gratuito.</p><p>A proposta é incentivar o pensamento crítico sobre consumo, sustentabilidade e responsabilidade social.</p><p>Inspirado nas reflexões de Annie Leonard em <cite>A História das Coisas</cite>, sem vínculo oficial ou endosso da autora.</p><a href="https://www.storyofstuff.org/movies/story-of-stuff/">Conheça a obra de referência ↗</a></div></dialog>
+  <dialog id="course-dialog" aria-labelledby="course-dialog-title"><button type="button" class="dialog-close" data-close-dialog aria-label="Fechar">×</button><p class="eyebrow">COMO SERÁ O CURSO</p><h2 id="course-dialog-title">Do primeiro passo<br>à prova final.</h2><ol class="format-steps"><li><span>01</span><div><h3>Objetivos e conteúdos</h3><p>Uma única página vertical, com etapas desbloqueadas conforme você avança.</p></div></li><li><span>02</span><div><h3>Atividades educativas</h3><p>Perguntas e interações para participar da aprendizagem e retomar as ideias.</p></div></li><li><span>03</span><div><h3>Prova final e certificado</h3><p>A avaliação, os critérios de aprovação e o modelo do certificado serão definidos depois.</p></div></li></ol><p class="small-note">As aulas e a prova ainda não foram criadas. O certificado também será preparado em outra etapa.</p></dialog>
+</body>
+</html>
+

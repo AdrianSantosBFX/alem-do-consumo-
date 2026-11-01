@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="questions" viewBox="0 0 160 130">
+    <g fill="none" stroke="#1F2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M106 43c1 20-12 34-32 33-18-1-31-14-30-33 2-18 14-30 32-29 18 0 30 12 30 29Z" fill="#fff"/>
+      <path d="M100 66c12 10 24 22 35 35l-9 9c-12-13-24-25-35-34m13-6 27 32"/>
+      <path d="M58 54c2-20 14-23 32-26-2 18-7 32-26 32m0-4 17-18M30 13l7 8M19 43l12 1M36 77l-8 8M111 18l8-7"/>
+      <path d="M22 112c13-4 28-3 40 1m-35 5c9-2 17-2 25-1" stroke-width="2"/>
+    </g>
+  </symbol>
+  <symbol id="learning" viewBox="0 0 160 130">
+    <g fill="none" stroke="#1F2937" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 36c20-7 35-4 54 6 18-12 35-15 57-11l4 67c-22-4-39 0-57 10-17-8-37-10-57-4l-1-68Z" fill="#fff"/>
+      <path d="m75 43 4 65M31 50c10-2 21 0 32 6M31 63c11-2 22 0 33 6M32 77c11-2 21 1 32 6M88 53c10-6 20-8 32-7M89 67c11-6 20-8 32-7M89 82c10-6 21-9 32-7" stroke-width="2"/>
+      <path d="M67 18c-3-7 1-13 7-13 10-1 13 9 5 14l-2 5M77 30v1M139 14l5-6M145 30l8-1M10 29l-5-5"/>
+      <path d="M35 118c26-4 56-1 81-4" stroke-width="2"/>
+    </g>
+  </symbol>
+</svg>

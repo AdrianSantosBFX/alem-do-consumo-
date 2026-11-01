@@ -1,0 +1,43 @@
+{
+  "site": {
+    "title": "Além do Consumo",
+    "url": "https://alemdoconsumo.com.br",
+    "description": "Um projeto independente e gratuito de educação socioambiental. Conheça a iniciativa, participe da prévia da pesquisa e descubra o curso sobre Consumo Sustentável."
+  },
+  "course": {
+    "id": "consumo-sustentavel",
+    "version": 1,
+    "title": "Consumo Sustentável",
+    "description": "Uma jornada contínua de leitura e atividades, com objetivos desbloqueados por etapas e uma prova final.",
+    "status": "draft",
+    "chapters": [],
+    "exam": null,
+    "certificate": {"status": "planned"}
+  },
+  "survey": {
+    "mode": "preview",
+    "questions": [
+      {
+        "id": "planejamento",
+        "title": "Com que frequência você compra algo sem ter planejado?",
+        "options": ["Nunca.","Raramente.","Às vezes.","Frequentemente.","Prefiro não responder."]
+      },
+      {
+        "id": "necessidade",
+        "title": "Antes de comprar, você considera usar o que já tem?",
+        "options": ["Sempre.","Às vezes.","Raramente.","Nunca.","Prefiro não responder."]
+      },
+      {
+        "id": "reparo",
+        "title": "Se algo deixa de funcionar, qual é sua primeira opção?",
+        "options": ["Tentar consertar.","Substituir por outro.","Avaliar caso a caso.","Prefiro não responder."]
+      },
+      {
+        "id": "conhecimento",
+        "title": "Como você avalia seu conhecimento sobre consumo sustentável?",
+        "options": ["Ainda estou começando.","Conheço algumas ideias.","Já estudo esse assunto.","Prefiro não responder."]
+      }
+    ]
+  }
+}
+
