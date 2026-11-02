@@ -50,6 +50,8 @@ O preenchimento fica somente na memória da página. Nenhuma resposta é enviada
 
 `functions/api/pesquisa.js` aceita somente POST JSON da mesma origem, limitado a 16 KiB. `server/survey-validation.mjs` valida versão, confirmações, perguntas conhecidas, tipos, limites, alternativas e município compatível com a UF. Campos extras são rejeitados. A gravação da participação e das respostas usa uma operação D1 batch, com todas as inserções confirmadas juntas ou revertidas em falha.
 
+O build gera `server/survey-definition.mjs` a partir de `content/portal.json`, para compatibilidade com o compilador das Functions usado pela Cloudflare. Esse arquivo é ignorado pelo Git e não é servido como recurso público. Edite somente o JSON de origem.
+
 O banco guarda UUID aleatório, versão do instrumento, versão da apresentação, confirmações de maioridade e participação, UF/código IBGE opcionais, data de envio, hash para reenvio e respostas por pergunta. Não há campos para nome, e-mail, CPF, telefone, IP ou informações do navegador. As respostas não entram em cookies, armazenamento local, URLs ou mensagens de log do aplicativo. A preferência de pausar animações é independente.
 
 Não há endpoint público para ler respostas. A administração atual ocorre no painel D1 ou pela ferramenta autenticada Wrangler. Não foram criados painel administrativo, rastreamento individual, CAPTCHA nem exclusão automática por prazo. Não existe recuperação de respostas da antiga prévia, pois ela não as armazenava.

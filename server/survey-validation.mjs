@@ -1,8 +1,8 @@
-import portal from '../content/portal.json' with {type:'json'};
+import {survey} from './survey-definition.mjs';
 import {localities} from '../assets/localities.mjs';
 import {isValidAnswer} from '../assets/survey-model.mjs';
 
-export const survey=portal.survey;
+export {survey};
 export class InvalidSubmission extends Error {}
 const assert=(condition)=>{if(!condition)throw new InvalidSubmission('Preenchimento inválido.');};
 const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
