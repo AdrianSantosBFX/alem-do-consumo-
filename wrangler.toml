@@ -1,0 +1,20 @@
+# Pages settings downloaded before adding D1. IDs identify databases, not credentials.
+name = "alem-do-consumo"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-11-01"
+vars = {}
+
+[[d1_databases]]
+binding = "DB"
+database_name = "alem-do-consumo-pesquisa"
+database_id = "5ebe5a91-0f36-43f8-93ef-876834ae5c4c"
+migrations_dir = "migrations"
+
+[env.preview]
+vars = {}
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "alem-do-consumo-pesquisa-testes"
+database_id = "a3f9446b-d054-446f-bc4e-e41e0ff907e6"
+migrations_dir = "migrations"

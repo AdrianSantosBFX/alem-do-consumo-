@@ -9,6 +9,7 @@ O visual segue a direção indicada a partir do Story of Stuff: títulos condens
 Requer Node.js 22 ou mais recente. Execute `npm ci` para instalar a versão fixada do Motion antes de iniciar ou gerar o site.
 
 ```text
+npm run db:migrate:local
 npm start
 ```
 
@@ -33,31 +34,61 @@ Não há menus, páginas públicas ou links para Materiais e Publicações. A an
 
 As telas usam a altura da janela. Em condições excepcionais de tela muito baixa ou zoom elevado, o conteúdo pode rolar dentro da área principal ou do card para preservar a leitura. A jornada do curso, quando publicada, usa rolagem vertical da página inteira.
 
-## Pesquisa: diagnóstico sem coleta
+## Pesquisa com Cloudflare D1
 
-Edite `survey` em `content/portal.json`. O instrumento tem identificador e versão, quatro seções e 14 perguntas. Cada pergunta possui `id` estável, `section`, `title` e `type` (`single`, `multiple` ou `scale`). As opções ficam em `options`; a escala usa `min: 0` e `max: 10`; Q4 usa `maxSelections: 3`. Q6 permite todas as alternativas. As demais perguntas aceitam uma escolha. Não há gabarito no diagnóstico.
+`content/portal.json` mantém os enunciados e alternativas das 14 perguntas, os IDs estáveis e a versão do instrumento. O modo ativo é `collect`; a apresentação de participação possui versão independente em `consentVersion`. Perguntas e localização continuam opcionais. Q4 admite até três escolhas; Q6 aceita múltiplas escolhas; Q2 preserva os valores de 0 a 10.
 
-Os enunciados e alternativas seguem o planejamento do questionário. Não acrescente alternativas de não resposta ao instrumento: todas as perguntas já são opcionais, e o botão **Limpar resposta** permite retirar uma escolha. **Próxima** permite continuar sem responder. A barra indica perguntas percorridas; o contador mostra quantas têm resposta. A conclusão requer percorrer as 14 perguntas, sem obrigar a responder.
+### Fluxo de envio
 
-Antes de iniciar, as confirmações de 18 anos ou mais e participação voluntária são obrigatórias. A localização é opcional. `assets/localities.mjs` contém uma cópia estática das 27 UFs e dos 5.571 municípios retornados pela [API de localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades), obtida em 01/11/2026. Não há consulta ao IBGE durante a visita; a cidade é filtrada no próprio navegador e apagada ao mudar de UF. O catálogo precisará ser atualizado manualmente se a divisão municipal mudar.
+As confirmações de maioridade e participação voluntária são exigidas antes de iniciar. A apresentação informa que as respostas serão armazenadas para compreender hábitos de consumo e orientar as atividades educativas, com divulgação agrupada.
 
-### Estado e privacidade
+O preenchimento fica somente na memória da página. Nenhuma resposta é enviada ao avançar ou voltar. Na última pergunta, **Enviar respostas** faz um único POST para `/api/pesquisa`. O formulário limpa as respostas e mostra o agradecimento apenas depois de receber a confirmação do servidor. Em erro ou timeout, mantém o preenchimento e permite tentar novamente. Os controles ficam bloqueados durante o envio. Atualizar ou sair da página descarta o preenchimento ainda não enviado; uma requisição já enviada pode terminar no servidor mesmo se a aba for fechada.
 
-`assets/survey-model.mjs` contém as funções puras de validação e navegação; `assets/survey-view.mjs` compartilha a apresentação entre build e navegador; `script.js` controla a interface; `assets/survey.css` estende somente os componentes da pesquisa, usando as cores e fontes já existentes.
+`assets/survey-client.mjs` mantém um UUID aleatório por tentativa e reutiliza esse UUID quando o mesmo preenchimento é reenviado após uma falha. O servidor compara o conteúdo e devolve o mesmo recibo sem criar outra participação. Uma alteração no preenchimento cria uma nova tentativa. Não há identificação de dispositivo ou bloqueio de várias participações por pessoa.
 
-As respostas ficam em uma variável privada da página, com `step`, `adult`, `voluntary`, `location` e `answers`. Não há banco, endpoint, envio, cookies ou armazenamento do preenchimento no navegador. Atualizar, sair da página, concluir ou reiniciar descarta os dados. A restauração pelo cache de navegação também reinicia o formulário. Formulários usam `autocomplete="off"`. Os dados não aparecem na URL, em registros do aplicativo ou em estatísticas.
+### Dados e validação
 
-A preferência existente de pausar animações é independente do questionário e não armazena respostas.
+`functions/api/pesquisa.js` aceita somente POST JSON da mesma origem, limitado a 16 KiB. `server/survey-validation.mjs` valida versão, confirmações, perguntas conhecidas, tipos, limites, alternativas e município compatível com a UF. Campos extras são rejeitados. A gravação da participação e das respostas usa uma operação D1 batch, com todas as inserções confirmadas juntas ou revertidas em falha.
 
-### Estrutura para integração futura
+O banco guarda UUID aleatório, versão do instrumento, versão da apresentação, confirmações de maioridade e participação, UF/código IBGE opcionais, data de envio, hash para reenvio e respostas por pergunta. Não há campos para nome, e-mail, CPF, telefone, IP ou informações do navegador. As respostas não entram em cookies, armazenamento local, URLs ou mensagens de log do aplicativo. A preferência de pausar animações é independente.
 
-Os IDs do questionário, das perguntas e dos municípios e a versão do instrumento permitem uma futura camada de persistência separada. As alternativas são representadas por índices: mantenha a ordem dentro da mesma versão; altere a versão ao revisar enunciados ou alternativas. Respostas múltiplas são listas de índices, escala é número e ausência de resposta é um campo ausente. Não é gerado identificador de participante nesta versão.
+Não há endpoint público para ler respostas. A administração atual ocorre no painel D1 ou pela ferramenta autenticada Wrangler. Não foram criados painel administrativo, rastreamento individual, CAPTCHA nem exclusão automática por prazo. Não existe recuperação de respostas da antiga prévia, pois ela não as armazenava.
 
-A integração com D1 exigirá uma decisão explícita e uma nova camada de serviço, com contrato, validação no servidor e política de dados. Nenhum adaptador, função de envio, endpoint ou esquema de banco foi criado agora. O modo `preview` é o único permitido e não habilita coleta real.
+### Bancos e migrações
+
+`wrangler.toml` é a configuração do Pages e vincula `DB` a bancos diferentes:
+
+| Ambiente | Banco |
+|---|---|
+| Produção | `alem-do-consumo-pesquisa` |
+| Preview | `alem-do-consumo-pesquisa-testes` |
+
+Os IDs do banco são identificadores de recurso, não credenciais. Não crie `DB` como variável de texto. A configuração foi baseada no download das configurações existentes; preserva o nome, a saída `dist` e a data de compatibilidade. A implantação do arquivo passa a controlar os vínculos no painel.
+
+`0001_survey.sql` cria `survey_versions`, `survey_submissions` e `survey_answers`, com chaves estrangeiras e índices. `0002_diagnostic_v1.sql` registra uma cópia imutável das perguntas e alternativas da versão 1. As migrações aplicadas são controladas pelo Wrangler em `d1_migrations`. Novas alterações devem usar novos arquivos SQL. Ao alterar enunciados ou a ordem das alternativas, incremente a versão e adicione uma nova definição; preserve as versões anteriores.
+
+Desenvolvimento local, sem acesso ao banco real:
+
+```text
+npm ci
+npm run db:migrate:local
+npm start
+```
+
+Migrações remotas, executadas explicitamente antes de publicar uma versão que dependa delas:
+
+```text
+npm run db:migrate:test
+npm run db:migrate:production
+```
+
+Esses dois comandos exigem uma sessão Cloudflare autenticada. O build não aplica migrações automaticamente. `npm run start:static` serve apenas os arquivos visuais e não grava respostas. Estado local `.wrangler/` e arquivos `.dev.vars` são ignorados pelo Git.
+
+`dist/_routes.json` limita as Pages Functions a `/api/*`; as três páginas e os recursos permanecem estáticos. `functions/` fica na raiz do repositório e é compilada pelo Pages durante a publicação. O comando de build continua `npm run build`, com saída `dist` e branch principal `main`.
 
 ### Verificações
 
-`npm run check` verifica a sintaxe. `npm test` gera o site e verifica instrumento, maioridade, localização, navegação, respostas opcionais, escala, limite de seleção, revisão, conclusão, limpeza e ausência de APIs de persistência/envio no código da pesquisa, além das regressões das páginas e do curso. Os testes não gravam respostas reais. A interface também deve ser conferida em desktop e celular, com teclado, antes de futuras alterações.
+`npm run check` verifica a sintaxe; `npm test` inclui os testes anteriores e os testes da API, SQL, validação, idempotência, concorrência, falha com reversão e reenvio. Os testes SQL usam SQLite em memória no Node.js e também são conferidos no D1 local e de testes antes de ativar a produção. Não use dados reais para testar no banco de produção.
 
 ## Curso: uma página contínua, ainda sem conteúdo
 
@@ -118,6 +149,6 @@ Os testes de animação verificam cancelamento, restauração de estilos e subst
 
 ## Cloudflare
 
-A arquitetura permanece estática. Use `npm run build` e publique o conteúdo de `dist/` no Cloudflare Pages. Domínio preparado nos metadados: `alemdoconsumo.com.br`. Nenhum deploy ou alteração de DNS é feito por esta revisão.
+As páginas permanecem estáticas e o recebimento da pesquisa usa uma Pages Function com D1. Use `npm run build` e publique o conteúdo de `dist/` no Cloudflare Pages. Domínio preparado nos metadados: `alemdoconsumo.com.br`. A publicação deve ocorrer depois das migrações necessárias; não exige mudança de DNS.
 
 Referência visual indicada pelo responsável: [Story of Stuff](https://www.storyofstuff.org/). O projeto e sua identidade são independentes, sem vínculo oficial ou endosso da organização ou de Annie Leonard.

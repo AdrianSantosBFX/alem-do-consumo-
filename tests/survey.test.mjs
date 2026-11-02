@@ -61,17 +61,17 @@ test('Todas as perguntas podem ficar sem resposta, sem adicionar alternativas ao
   assert.equal(selectAnswer(survey,at(0),100).answers.q01,undefined);
 });
 test('Validação rejeita IDs repetidos, modo de coleta, limites e configuração inválidos',()=>{
-  assert.throws(()=>validateSurvey({...survey,mode:'live'}),/prévia/);
+  assert.throws(()=>validateSurvey({...survey,mode:'live'}),/Modo/);
   const duplicate=structuredClone(survey);duplicate.questions[1].id='q01';assert.throws(()=>validateSurvey(duplicate),/repetido/);
   const invalid=structuredClone(survey);invalid.questions[3].maxSelections=9;assert.throws(()=>validateSurvey(invalid),/Limite/);
   const scale=structuredClone(survey);scale.questions[1].max=11;assert.throws(()=>validateSurvey(scale),/Escala/);
 });
-test('Controlador e modelo não persistem nem transmitem respostas; saída e BFCache limpam o estado',async()=>{
+test('Preenchimento não usa armazenamento local; envio ocorre ao concluir e saída limpa o estado',async()=>{
   for(const file of ['script.js','assets/survey-model.mjs','assets/survey-view.mjs','assets/localities.mjs']){
     const source=await readFile(new URL('../'+file,import.meta.url),'utf8');
     assert.doesNotMatch(source,/localStorage|sessionStorage|indexedDB|document\.cookie|fetch\(|XMLHttpRequest|sendBeacon|WebSocket|https?:\/\/(?!servicodados\.ibge\.gov\.br\/api\/docs\/localidades)/);
   }
   const client=await readFile(new URL('../script.js',import.meta.url),'utf8');
   assert.match(client,/event\.preventDefault\(\)/);assert.match(client,/pagehide/);assert.match(client,/event\.persisted/);
-  assert.match(client,/não foram armazenadas nem enviadas/);
+  assert.match(client,/await sender.send/);assert.match(client,/enviadas e registradas/);assert.match(client,/if\(submitting\)return/);
 });

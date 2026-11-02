@@ -19,7 +19,7 @@
   "survey": {
     "id": "diagnostico-socioambiental",
     "version": 1,
-    "mode": "preview",
+    "mode": "collect",
     "sections": [
       {
         "id": "previo",
@@ -221,6 +221,7 @@
           "Responsabilidade das empresas e governos."
         ]
       }
-    ]
+    ],
+    "consentVersion": "2026-11-02-v1"
   }
 }

@@ -1,7 +1,8 @@
 // Pure questionnaire state. No storage, networking, DOM or submission side effects.
 export function validateSurvey(survey) {
   const assert=(condition,message)=>{if(!condition)throw new Error(message);};
-  assert(survey.mode==='preview','Esta versão permite somente prévia sem coleta de respostas.');
+  assert(survey.mode==='collect','Modo de pesquisa inválido: esta versão usa collect.');
+  assert(typeof survey.consentVersion==='string'&&survey.consentVersion.length>0,'Defina a versão da apresentação e participação.');
   assert(/^[a-z0-9-]+$/.test(survey.id)&&Number.isInteger(survey.version)&&survey.version>0,'Questionário sem identificador ou versão.');
   assert(Array.isArray(survey.sections)&&survey.sections.length>0,'Defina as seções.');
   const sections=new Set();

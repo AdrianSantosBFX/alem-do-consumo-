@@ -6,13 +6,14 @@ O site tem três áreas: **O Projeto**, **Pesquisa** e **Curso sobre Consumo Sus
 
 ## Executar localmente
 
-Requer Node.js 22 ou mais recente. Instale a versão fixada do Motion antes de executar:
+Requer Node.js 22 ou mais recente (Node.js 24 recomendado para os testes SQLite). Instale as dependências fixadas antes de executar:
 
 ```sh
 npm ci
 ```
 
 ```sh
+npm run db:migrate:local
 npm start
 ```
 
@@ -31,9 +32,9 @@ A saída estática fica em `dist/`, que é gerada localmente e não é versionad
 ## Estado atual
 
 - Identidade visual própria, com marca tipográfica e ilustrações em traço preto.
-- Pesquisa com 14 perguntas opcionais, quatro seções, confirmação de maioridade e localização opcional com municípios. As respostas ficam apenas na memória e são apagadas ao sair, atualizar, reiniciar ou concluir.
+- Pesquisa com 14 perguntas opcionais, quatro seções, confirmação de maioridade e localização opcional com municípios. O preenchimento fica na memória até o envio final; as respostas confirmadas são gravadas no D1. Falhas preservam o preenchimento e permitem tentar novamente.
 - Curso, prova e certificado em preparação, sem conteúdos ou emissão simulados.
-- Base em HTML, CSS e JavaScript, sem autenticação ou banco de dados.
+- HTML, CSS e JavaScript, com Pages Function para recebimento anônimo e Cloudflare D1.
 - Animações com Motion: entradas em sequência, interações dos cards e transições da pesquisa. Biblioteca servida localmente, com pausa e preferência de movimento reduzido.
 
 Consulte [LEIA-ME.md](LEIA-ME.md) para editar o questionário, preparar o curso e conhecer os arquivos ativos. As fontes locais incluem suas respectivas licenças.

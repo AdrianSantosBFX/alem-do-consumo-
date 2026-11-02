@@ -15,7 +15,7 @@ export function validateData(data) {
   validateCourse(data.course);validateSurvey(data.survey);
 }
 const courseScreen=course=>`<section class="screen course-screen section-shell" aria-labelledby="course-title"><div class="screen-intro"><p class="eyebrow"><span class="blue-line"></span> CURSO GRATUITO</p><h1 id="course-title">Curso sobre<br> <span>Consumo Sustentável.</span></h1><p class="intro-description">Uma página para aprender, participar e seguir em frente. Cada etapa abre o próximo passo.</p></div><article class="course-card"><div class="card-top"><span class="status-tag">${course.status==='published'?'Disponível':'Em preparação'}</span><svg class="course-sketch" aria-hidden="true"><use href="/assets/sketches.svg#learning"/></svg></div><h2>Seu percurso</h2><ol class="course-overview"><li><span>01</span>Objetivos e conteúdos educativos</li><li><span>02</span>Atividades e avanço por etapas</li><li><span>03</span>Prova final e certificado</li></ol><div class="course-card-actions">${course.status==='published'?`<a class="button" href="/curso/${course.id}/">Iniciar curso <span aria-hidden="true">↗</span></a>`:'<span class="availability">As aulas ainda estão sendo preparadas.</span>'}<button type="button" class="text-link" data-open-dialog="course-dialog">Como vai funcionar <span aria-hidden="true">↗</span></button></div><p class="small-note">O modelo do certificado e a emissão serão preparados depois.</p></article></section>`;
-const researchScreen=survey=>`<section class="screen research-screen section-shell" aria-labelledby="research-title"><div class="screen-intro research-intro"><p class="eyebrow"><span class="blue-line"></span> QUESTIONÁRIO SOCIOAMBIENTAL</p><h1 id="research-title">Pesquisa<br>Além do Consumo<span class="heading-period">.</span></h1><p class="intro-description">Uma pergunta de cada vez.<br>Um olhar para os seus hábitos.</p><span class="preview-note">Participação anônima · sem envio de respostas.</span></div><div class="survey-card" id="survey-card" aria-label="Questionário sobre hábitos de consumo">${renderSurveyIntro(survey,{ready:false})}</div><script type="application/json" id="survey-data">${JSON.stringify(survey).replace(/</g,'\\u003c')}</script></section>`;
+const researchScreen=survey=>`<section class="screen research-screen section-shell" aria-labelledby="research-title"><div class="screen-intro research-intro"><p class="eyebrow"><span class="blue-line"></span> QUESTIONÁRIO SOCIOAMBIENTAL</p><h1 id="research-title">Pesquisa<br>Além do Consumo<span class="heading-period">.</span></h1><p class="intro-description">Uma pergunta de cada vez.<br>Um olhar para os seus hábitos.</p><span class="preview-note">Participação anônima · perguntas opcionais.</span></div><div class="survey-card" id="survey-card" aria-label="Questionário sobre hábitos de consumo">${renderSurveyIntro(survey,{ready:false})}</div><script type="application/json" id="survey-data">${JSON.stringify(survey).replace(/</g,'\\u003c')}</script></section>`;
 export function createPages(data,layout,home) {
   validateData(data);
   const pages=new Map();
@@ -26,7 +26,7 @@ export function createPages(data,layout,home) {
     pages.set(route,{html,noindex});
   }
   add('/','O Projeto',data.site.description,home);
-  add('/pesquisa/','Pesquisa','Pesquisa anônima sobre consumo e conhecimento socioambiental. 14 perguntas, sem envio ou armazenamento de respostas.',researchScreen(data.survey));
+  add('/pesquisa/','Pesquisa','Pesquisa anônima sobre consumo e conhecimento socioambiental. 14 perguntas opcionais para compreender hábitos de consumo e conhecimentos socioambientais.',researchScreen(data.survey));
   add('/curso/','Curso sobre Consumo Sustentável',data.course.description,courseScreen(data.course));
   if(data.course.status==='published')add(`/curso/${data.course.id}/`,data.course.title,data.course.description,renderCourse(data.course),{journey:true});
   add('/404/','Página não encontrada','O endereço solicitado não foi encontrado.',`<section class="screen error-screen section-shell"><div><p class="eyebrow">ERRO 404</p><h1>Esta página<br>não existe.</h1><a class="button" href="/">Voltar ao projeto <span aria-hidden="true">→</span></a></div></section>`,{noindex:true});
@@ -35,7 +35,7 @@ export function createPages(data,layout,home) {
 export async function build() {
   const [raw,layout,home]=await Promise.all([readFile(path.join(projectRoot,'content/portal.json'),'utf8'),readFile(path.join(projectRoot,'templates/layout.html'),'utf8'),readFile(path.join(projectRoot,'templates/home.html'),'utf8')]);
   const data=JSON.parse(raw),pages=createPages(data,layout,home);
-  const assets=['styles.css','script.js','html.mjs','assets/sketches.svg','assets/story-style.css','assets/fonts','assets/motion.js','assets/motion-core.mjs','assets/motion.css','assets/survey-model.mjs','assets/survey-view.mjs','assets/survey.css','assets/localities.mjs'];
+  const assets=['styles.css','script.js','html.mjs','assets/sketches.svg','assets/story-style.css','assets/fonts','assets/motion.js','assets/motion-core.mjs','assets/motion.css','assets/survey-model.mjs','assets/survey-client.mjs','assets/survey-view.mjs','assets/survey.css','assets/localities.mjs'];
   if(data.course.status==='published')assets.push('assets/journey.css','assets/lesson-player.mjs','assets/journey-model.mjs');
   const fingerprint=createHash('sha256').update(raw).update(layout).update(home);
   for(const file of [...assets.filter(file=>/\.(css|m?js)$/.test(file)),'package-lock.json'])fingerprint.update(await readFile(path.join(projectRoot,file)));
@@ -55,6 +55,7 @@ export async function build() {
   const vendor=path.join(output,'assets/vendor');await mkdir(vendor,{recursive:true});
   await cp(path.join(projectRoot,'node_modules/motion/dist/motion.js'),path.join(vendor,'motion.mjs'));
   await cp(path.join(projectRoot,'node_modules/motion/LICENSE.md'),path.join(vendor,'MOTION-LICENSE.md'));
+  await writeFile(path.join(output,'_routes.json'),JSON.stringify({version:1,include:['/api/*'],exclude:[]}));
   await writeFile(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...pages].filter(([,page])=>!page.noindex).map(([route])=>`<url><loc>${e(data.site.url.replace(/\/$/,'')+route)}</loc></url>`).join('')}</urlset>`);
   await writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${data.site.url}/sitemap.xml\n`);
   await writeFile(path.join(output,'_headers'),'/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n');
