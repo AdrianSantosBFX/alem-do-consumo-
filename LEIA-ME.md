@@ -112,6 +112,8 @@ A biblioteca [Motion](https://motion.dev/docs/quick-start) está fixada em `moti
 
 O botão do rodapé interrompe também os movimentos contínuos. A preferência do sistema por movimento reduzido tem prioridade. A animação não bloqueia respostas nem links, não clona formulários e não recebe o estado da pesquisa. Trocas rápidas cancelam os efeitos anteriores; abas ocultas e páginas abandonadas encerram os movimentos. Se o bundle não carregar, a navegação e a pesquisa continuam funcionando.
 
+O build adiciona uma versão por conteúdo aos links CSS/JavaScript e a todos os imports locais, inclusive o Motion. Isso impede misturar módulos antigos e novos no cache do navegador. As páginas HTML recebem `Cache-Control: no-cache` para revalidar a versão publicada; nenhuma configuração de DNS é alterada.
+
 Os testes de animação verificam cancelamento, restauração de estilos e substituição de transições. A validação no navegador cobre as três páginas, diálogos, pesquisa, pausa, navegação rápida e telas menores.
 
 ## Cloudflare

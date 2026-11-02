@@ -52,3 +52,18 @@ test('Build publica o Motion e a licença localmente, sem scripts externos no la
   const layout=await readFile(new URL('templates/layout.html',root),'utf8');assert.doesNotMatch(layout,/<script[^>]+src="https?:/);assert.doesNotMatch(layout,/<script[^>]+src="\/assets\/motion.js/);
   const runtime=await readFile(new URL('assets/motion.js',root),'utf8');assert.match(runtime,/prefers-reduced-motion/);assert.match(runtime,/visibilitychange/);assert.match(runtime,/import\('\.\/vendor\/motion.mjs'\)/);
 });
+test('HTML e todos os imports locais usam a mesma versão para evitar misturar arquivos em cache',async()=>{
+  const output=new URL('../dist/',import.meta.url);
+  const html=await readFile(new URL('index.html',output),'utf8');
+  const version=html.match(/src="\/script\.js\?v=([a-f0-9]{12})"/)[1];
+  for(const [,url] of html.matchAll(/(?:src|href)="(\/[^"?]+\.(?:css|m?js)[^"]*)"/g))assert.ok(url.endsWith('?v='+version),url);
+  for(const file of ['script.js','assets/motion.js','assets/motion-core.mjs','assets/survey-view.mjs','assets/survey-model.mjs']){
+    const source=await readFile(new URL(file,output),'utf8');
+    for(const [,url] of source.matchAll(/['"](\.{1,2}\/[^'"]+\.m?js[^'"]*)['"]/g)){
+      assert.ok(url.endsWith('?v='+version),`${file} → ${url}`);
+      const target=new URL(url,new URL(file,output));target.search='';await access(target);
+    }
+  }
+  const headers=await readFile(new URL('_headers',output),'utf8');
+  for(const route of ['/','/pesquisa/','/curso/'])assert.ok(headers.includes(`${route}\n  Cache-Control: no-cache`));
+});

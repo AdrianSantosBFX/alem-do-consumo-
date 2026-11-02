@@ -1,5 +1,6 @@
 import {readFile,writeFile,mkdir,cp,rm,lstat} from 'node:fs/promises';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {escapeHtml as e} from './html.mjs';
 import {validateCourse,renderCourse} from './course.mjs';
@@ -34,20 +35,30 @@ export function createPages(data,layout,home) {
 export async function build() {
   const [raw,layout,home]=await Promise.all([readFile(path.join(projectRoot,'content/portal.json'),'utf8'),readFile(path.join(projectRoot,'templates/layout.html'),'utf8'),readFile(path.join(projectRoot,'templates/home.html'),'utf8')]);
   const data=JSON.parse(raw),pages=createPages(data,layout,home);
+  const assets=['styles.css','script.js','html.mjs','assets/sketches.svg','assets/story-style.css','assets/fonts','assets/motion.js','assets/motion-core.mjs','assets/motion.css','assets/survey-model.mjs','assets/survey-view.mjs','assets/survey.css','assets/localities.mjs'];
+  if(data.course.status==='published')assets.push('assets/journey.css','assets/lesson-player.mjs','assets/journey-model.mjs');
+  const fingerprint=createHash('sha256').update(raw).update(layout).update(home);
+  for(const file of [...assets.filter(file=>/\.(css|m?js)$/.test(file)),'package-lock.json'])fingerprint.update(await readFile(path.join(projectRoot,file)));
+  const assetVersion=fingerprint.digest('hex').slice(0,12);
   const output=path.resolve(projectRoot,'dist');
   assert(path.dirname(output)===projectRoot&&path.basename(output)==='dist','Saída fora da pasta do projeto.');
   try{assert(!(await lstat(output)).isSymbolicLink(),'A saída não pode ser um link simbólico.');}catch(error){if(error.code!=='ENOENT')throw error;}
   await rm(output,{recursive:true,force:true});await mkdir(output,{recursive:true});
-  for(const [route,page] of pages){const target=route==='/404/'?path.join(output,'404.html'):path.join(output,route,'index.html');await mkdir(path.dirname(target),{recursive:true});await writeFile(target,page.html);}
-  const assets=['styles.css','script.js','html.mjs','assets/sketches.svg','assets/story-style.css','assets/fonts','assets/motion.js','assets/motion-core.mjs','assets/motion.css','assets/survey-model.mjs','assets/survey-view.mjs','assets/survey.css','assets/localities.mjs'];
-  if(data.course.status==='published')assets.push('assets/journey.css','assets/lesson-player.mjs','assets/journey-model.mjs');
-  for(const file of assets){const target=path.join(output,file);await mkdir(path.dirname(target),{recursive:true});await cp(path.join(projectRoot,file),target,{recursive:true});}
+  for(const [route,page] of pages){page.html=page.html.replace(/(href|src)="(\/[^"?]+\.(?:css|m?js))"/g,(_,attribute,url)=>`${attribute}="${url}?v=${assetVersion}"`);const target=route==='/404/'?path.join(output,'404.html'):path.join(output,route,'index.html');await mkdir(path.dirname(target),{recursive:true});await writeFile(target,page.html);}
+  for(const file of assets){
+    const target=path.join(output,file);await mkdir(path.dirname(target),{recursive:true});
+    if(/\.m?js$/.test(file)){
+      const client=await readFile(path.join(projectRoot,file),'utf8');
+      await writeFile(target,client.replace(/(['"])(\.{1,2}\/[^'"]+\.m?js)\1/g,(_,quote,url)=>`${quote}${url}?v=${assetVersion}${quote}`));
+    }else await cp(path.join(projectRoot,file),target,{recursive:true});
+  }
   const vendor=path.join(output,'assets/vendor');await mkdir(vendor,{recursive:true});
   await cp(path.join(projectRoot,'node_modules/motion/dist/motion.js'),path.join(vendor,'motion.mjs'));
   await cp(path.join(projectRoot,'node_modules/motion/LICENSE.md'),path.join(vendor,'MOTION-LICENSE.md'));
   await writeFile(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...pages].filter(([,page])=>!page.noindex).map(([route])=>`<url><loc>${e(data.site.url.replace(/\/$/,'')+route)}</loc></url>`).join('')}</urlset>`);
   await writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${data.site.url}/sitemap.xml\n`);
   await writeFile(path.join(output,'_headers'),'/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n');
+  await writeFile(path.join(output,'_headers'),[...pages.keys()].map(route=>`${route==='/404/'?'/404.html':route}\n  Cache-Control: no-cache\n`).join('\n'),{flag:'a'});
   await writeFile(path.join(projectRoot,'index.html'),pages.get('/').html);
   console.log(`Build concluído: ${pages.size} páginas HTML; ${data.survey.questions.length} perguntas de diagnóstico; curso ${data.course.status==='published'?'publicado':'em preparação'}.`);
   return {data,pages,output};
