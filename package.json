@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node build.mjs",
     "start": "node build.mjs && node server.mjs",
-    "check": "node --check script.js && node --check assets/motion.js && node --check assets/survey-model.mjs && node --check assets/lesson-player.mjs && node --check assets/journey-model.mjs && node --check course.mjs && node --check learning.mjs && node --check server.mjs && node --check build.mjs",
+    "check": "node --check script.js && node --check assets/motion.js && node --check assets/survey-model.mjs && node --check assets/lesson-player.mjs && node --check assets/journey-model.mjs && node --check course.mjs && node --check learning.mjs && node --check server.mjs && node --check build.mjs && node --check assets/survey-view.mjs && node --check assets/localities.mjs",
     "pretest": "node build.mjs",
     "test": "node --test tests/compact.test.mjs tests/survey.test.mjs tests/course.test.mjs"
   }

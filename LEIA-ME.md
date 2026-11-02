@@ -25,7 +25,7 @@ O build gera `dist/`. O arquivo `index.html` na raiz também é atualizado autom
 ## Estado da entrega
 
 - `/`: apresentação do projeto, dois cards de acesso e informações da iniciativa em diálogo.
-- `/pesquisa/`: prévia editável com quatro perguntas, uma por vez. Permite responder, avançar, voltar e recomeçar.
+- `/pesquisa/`: questionário diagnóstico com 14 perguntas opcionais em quatro seções, uma por vez. Permite responder, avançar, voltar, limpar e recomeçar.
 - `/curso/`: card de apresentação do curso e explicação do formato previsto.
 - `404.html`: página para endereços inexistentes.
 
@@ -33,13 +33,31 @@ Não há menus, páginas públicas ou links para Materiais e Publicações. A an
 
 As telas usam a altura da janela. Em condições excepcionais de tela muito baixa ou zoom elevado, o conteúdo pode rolar dentro da área principal ou do card para preservar a leitura. A jornada do curso, quando publicada, usa rolagem vertical da página inteira.
 
-## Pesquisa: prévia, não coleta
+## Pesquisa: diagnóstico sem coleta
 
-Edite `survey.questions` em `content/portal.json`. Cada pergunta tem `id` único, `title` e `options`. Mantenha uma alternativa `Prefiro não responder.`. As quatro perguntas são uma proposta inicial editável, não um instrumento validado de pesquisa.
+Edite `survey` em `content/portal.json`. O instrumento tem identificador e versão, quatro seções e 14 perguntas. Cada pergunta possui `id` estável, `section`, `title` e `type` (`single`, `multiple` ou `scale`). As opções ficam em `options`; a escala usa `min: 0` e `max: 10`; Q4 usa `maxSelections: 3`. Q6 permite todas as alternativas. As demais perguntas aceitam uma escolha. Não há gabarito no diagnóstico.
 
-O fluxo exige uma seleção antes de continuar. A opção de não responder permite seguir adiante. É possível voltar para revisar a escolha. As respostas ficam somente na memória da página: **não são enviadas e não são salvas**. Recarregar recomeça a prévia. A tela final informa isso explicitamente.
+Os enunciados e alternativas seguem o planejamento do questionário. Não acrescente alternativas de não resposta ao instrumento: todas as perguntas já são opcionais, e o botão **Limpar resposta** permite retirar uma escolha. **Próxima** permite continuar sem responder. A barra indica perguntas percorridas; o contador mostra quantas têm resposta. A conclusão requer percorrer as 14 perguntas, sem obrigar a responder.
 
-O modo `preview` é o único habilitado. Uma coleta real precisará ser definida em outra etapa, com instrumento, responsável, privacidade e serviço de coleta reais. Não basta trocar um texto para começar a coletar.
+Antes de iniciar, as confirmações de 18 anos ou mais e participação voluntária são obrigatórias. A localização é opcional. `assets/localities.mjs` contém uma cópia estática das 27 UFs e dos 5.571 municípios retornados pela [API de localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades), obtida em 01/11/2026. Não há consulta ao IBGE durante a visita; a cidade é filtrada no próprio navegador e apagada ao mudar de UF. O catálogo precisará ser atualizado manualmente se a divisão municipal mudar.
+
+### Estado e privacidade
+
+`assets/survey-model.mjs` contém as funções puras de validação e navegação; `assets/survey-view.mjs` compartilha a apresentação entre build e navegador; `script.js` controla a interface; `assets/survey.css` estende somente os componentes da pesquisa, usando as cores e fontes já existentes.
+
+As respostas ficam em uma variável privada da página, com `step`, `adult`, `voluntary`, `location` e `answers`. Não há banco, endpoint, envio, cookies ou armazenamento do preenchimento no navegador. Atualizar, sair da página, concluir ou reiniciar descarta os dados. A restauração pelo cache de navegação também reinicia o formulário. Formulários usam `autocomplete="off"`. Os dados não aparecem na URL, em registros do aplicativo ou em estatísticas.
+
+A preferência existente de pausar animações é independente do questionário e não armazena respostas.
+
+### Estrutura para integração futura
+
+Os IDs do questionário, das perguntas e dos municípios e a versão do instrumento permitem uma futura camada de persistência separada. As alternativas são representadas por índices: mantenha a ordem dentro da mesma versão; altere a versão ao revisar enunciados ou alternativas. Respostas múltiplas são listas de índices, escala é número e ausência de resposta é um campo ausente. Não é gerado identificador de participante nesta versão.
+
+A integração com D1 exigirá uma decisão explícita e uma nova camada de serviço, com contrato, validação no servidor e política de dados. Nenhum adaptador, função de envio, endpoint ou esquema de banco foi criado agora. O modo `preview` é o único permitido e não habilita coleta real.
+
+### Verificações
+
+`npm run check` verifica a sintaxe. `npm test` gera o site e verifica instrumento, maioridade, localização, navegação, respostas opcionais, escala, limite de seleção, revisão, conclusão, limpeza e ausência de APIs de persistência/envio no código da pesquisa, além das regressões das páginas e do curso. Os testes não gravam respostas reais. A interface também deve ser conferida em desktop e celular, com teclado, antes de futuras alterações.
 
 ## Curso: uma página contínua, ainda sem conteúdo
 
@@ -70,7 +88,7 @@ O modelo será criado depois no Canva, conforme planejado. `course.certificate.s
 
 ## Arquivos ativos
 
-- `content/portal.json`: projeto, curso e prévia da pesquisa.
+- `content/portal.json`: projeto, curso e instrumento versionado da pesquisa.
 - `templates/layout.html` e `templates/home.html`: estrutura das telas.
 - `styles.css`: layout de uma tela, componentes e responsividade.
 - `assets/story-style.css`: identidade gráfica inspirada na referência.

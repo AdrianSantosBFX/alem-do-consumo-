@@ -1,0 +1,35 @@
+/* Questionnaire extensions: inherit the project's palette and components. */
+.research-intro h1{font-size:clamp(42px,min(6.4vw,9svh),76px)}
+.survey-consent{display:grid;gap:8px;margin-bottom:18px}
+.survey-consent .survey-option{align-items:flex-start}
+.survey-consent input{margin-top:3px}
+.survey-section{margin-bottom:8px}
+.survey-hint{font-size:11px;color:var(--muted);line-height:1.7;margin:0 0 12px}
+.survey-error{font-size:12px;font-weight:650;color:var(--blue-dark);line-height:1.6;margin-top:10px}
+.survey-error:empty{margin:0}
+.survey-clear{margin-top:13px;font-size:11px;text-decoration:underline}
+.survey-clear:disabled{color:var(--muted);text-decoration:none}
+.survey-location{display:grid;gap:16px;margin-top:22px}
+.survey-field{display:grid;gap:7px;font-size:12px;font-weight:650;color:var(--blue-dark)}
+.survey-field select{width:100%;min-width:0;min-height:44px;padding:10px 12px;font:12px var(--sans);color:var(--text);background:var(--white);border:1px solid var(--muted);border-radius:0}
+.survey-field select:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.survey-field select:disabled{background:var(--blue-light);color:var(--muted)}
+.survey-scale{grid-template-columns:repeat(6,minmax(0,1fr))}
+.survey-scale .survey-option{min-height:44px;justify-content:center;gap:6px;padding:8px 4px;font-size:13px}
+.survey-scale .survey-option input{width:13px;height:13px}
+.survey-card .survey-option{min-height:40px}
+.survey-card .survey-local-note{font-size:10px}
+.survey-card .survey-actions .text-link{min-height:44px;font-size:12px}
+.survey-card .button{min-height:44px}
+.survey-finish .survey-progress{margin-top:20px}
+.is-started .survey-card:has(#question-form){height:100%;display:flex;flex-direction:column;overflow:hidden}
+.survey-card #question-form{display:flex;flex-direction:column;min-height:0;flex:1}
+.survey-card #question-form fieldset{min-height:0;overflow:auto;padding:4px 6px 6px 4px;margin:-4px -6px -6px -4px;scrollbar-width:thin}
+.survey-card #question-form legend{float:left;margin-bottom:12px}
+.survey-card #question-form .survey-hint{clear:both}
+.survey-card #question-form .survey-actions,.survey-card #question-form .survey-clear{flex-shrink:0}
+.survey-card #question-form .survey-actions{margin-top:12px}
+.survey-card:has(#question-form) .survey-local-note{flex-shrink:0;margin-top:10px}
+@media(max-width:700px){.research-screen:not(.is-started){height:100%;min-height:0;grid-template-rows:auto minmax(0,1fr);gap:18px;padding-block:18px}.research-screen:not(.is-started) .research-intro .intro-description,.research-screen:not(.is-started) .preview-note{display:none}.research-screen:not(.is-started) .research-intro h1{font-size:32px}.research-screen:not(.is-started) .survey-card{max-height:100%;overflow:auto}.research-screen:not(.is-started) .survey-card>.eyebrow{display:none}.research-screen:not(.is-started) .survey-card h2{font-size:28px}}
+@media(max-width:700px){.research-intro h1{font-size:38px}.survey-card .survey-hint{font-size:11px}.survey-card .survey-option{font-size:12px;line-height:1.5}.survey-card .survey-progress{font-size:10px}.survey-card legend h2{line-height:1.15}.survey-card .survey-actions{gap:12px}.survey-card .survey-description{font-size:13px}.survey-card .survey-privacy p{font-size:11px;line-height:1.65}.survey-scale{grid-template-columns:repeat(4,minmax(0,1fr))}.survey-card .survey-scale .survey-option{font-size:13px}.survey-card .survey-local-note{display:block;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.survey-card *{scroll-behavior:auto;transition:none}}

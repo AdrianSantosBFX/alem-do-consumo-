@@ -27,7 +27,7 @@ A saída estática fica em `dist/`, que é gerada localmente e não é versionad
 ## Estado atual
 
 - Identidade visual própria, com marca tipográfica e ilustrações em traço preto.
-- Pesquisa com quatro perguntas de prévia, uma por vez. As respostas não são enviadas nem salvas.
+- Pesquisa com 14 perguntas opcionais, quatro seções, confirmação de maioridade e localização opcional com municípios. As respostas ficam apenas na memória e são apagadas ao sair, atualizar, reiniciar ou concluir.
 - Curso, prova e certificado em preparação, sem conteúdos ou emissão simulados.
 - Base em HTML, CSS e JavaScript, sem autenticação ou banco de dados.
 
