@@ -32,7 +32,7 @@ function enterPage(){
   if(!enabled()||!playback)return;
   reveal(document.querySelectorAll('.brand,.site-header nav'),{distance:-8,duration:.45,delay:Motion.stagger(.07)});
   reveal(document.querySelectorAll('.screen-intro>.eyebrow'),{distance:10,duration:.45});
-  reveal(document.querySelectorAll('.screen-intro h1'),{distance:26,duration:.72,delay:.05});
+  reveal(document.querySelectorAll('.screen-intro h1,.results-heading h1'),{distance:26,duration:.72,delay:.05});
   reveal(document.querySelectorAll('.screen-intro .intro-description,.project-more,.preview-note'),{distance:14,delay:Motion.stagger(.07,{startDelay:.16})});
   reveal(document.querySelectorAll('.destination-card,.course-card,#survey-card,.error-screen .button'),{distance:26,delay:Motion.stagger(.1,{startDelay:.12}),duration:.65});
   reveal(document.querySelectorAll('.course-overview li'),{distance:10,duration:.45,delay:Motion.stagger(.07,{startDelay:.3})});

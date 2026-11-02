@@ -2,7 +2,7 @@
 
 Projeto independente e gratuito de educação socioambiental, iniciado como atividade de extensão universitária.
 
-O site tem três áreas: **O Projeto**, **Pesquisa** e **Curso sobre Consumo Sustentável**. As páginas de apresentação são compactas; o curso terá uma jornada vertical com atividades e prova final.
+O site tem quatro áreas: **O Projeto**, **Pesquisa**, **Curso sobre Consumo Sustentável** e **Resultados**. As páginas de apresentação são compactas; o curso terá uma jornada vertical com atividades e prova final.
 
 ## Executar localmente
 
@@ -33,6 +33,7 @@ A saída estática fica em `dist/`, que é gerada localmente e não é versionad
 
 - Identidade visual própria, com marca tipográfica e ilustrações em traço preto.
 - Pesquisa com 14 perguntas opcionais, quatro seções, confirmação de maioridade e localização opcional com municípios. O preenchimento fica na memória até o envio final; as respostas confirmadas são gravadas no D1. Falhas preservam o preenchimento e permitem tentar novamente.
+- Resultados com mapa do Brasil por UF e gráficos nacionais das 14 perguntas; atualização automática a cada minuto e divulgação em grupos de cinco.
 - Curso, prova e certificado em preparação, sem conteúdos ou emissão simulados.
 - HTML, CSS e JavaScript, com Pages Function para recebimento anônimo e Cloudflare D1.
 - Animações com Motion: entradas em sequência, interações dos cards e transições da pesquisa. Biblioteca servida localmente, com pausa e preferência de movimento reduzido.

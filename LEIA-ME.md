@@ -1,12 +1,12 @@
 # Além do Consumo — versão enxuta
 
-Três destinos: **O Projeto**, **Pesquisa** e **Curso sobre Consumo Sustentável**. A apresentação de cada página usa uma tela. O conteúdo do curso será uma exceção: uma única jornada vertical, com objetivos, atividades e prova final.
+Quatro destinos: **O Projeto**, **Pesquisa**, **Curso sobre Consumo Sustentável** e **Resultados**. A apresentação de cada página usa uma tela. O conteúdo do curso será uma exceção: uma única jornada vertical, com objetivos, atividades e prova final.
 
 O visual segue a direção indicada a partir do Story of Stuff: títulos condensados, branco predominante e desenhos próprios em traço preto. A identidade mantém o azul do Além do Consumo. O nome do projeto aparece como marca tipográfica, sem ícone no cabeçalho.
 
 ## Abrir e verificar
 
-Requer Node.js 22 ou mais recente. Execute `npm ci` para instalar a versão fixada do Motion antes de iniciar ou gerar o site.
+Requer Node.js 22 ou mais recente. Execute `npm ci` para instalar as dependências fixadas antes de iniciar ou gerar o site.
 
 ```text
 npm run db:migrate:local
@@ -28,6 +28,7 @@ O build gera `dist/`. O arquivo `index.html` na raiz também é atualizado autom
 - `/`: apresentação do projeto, dois cards de acesso e informações da iniciativa em diálogo.
 - `/pesquisa/`: questionário diagnóstico com 14 perguntas opcionais em quatro seções, uma por vez. Permite responder, avançar, voltar, limpar e recomeçar.
 - `/curso/`: card de apresentação do curso e explicação do formato previsto.
+- `/resultados/`: mapa de participações por UF e resultados nacionais das 14 perguntas, sem registros individuais.
 - `404.html`: página para endereços inexistentes.
 
 Não há menus, páginas públicas ou links para Materiais e Publicações. A antiga apresentação demonstrativa do curso e as páginas de módulos não são publicadas.
@@ -54,7 +55,7 @@ O build gera `server/survey-definition.mjs` a partir de `content/portal.json`, p
 
 O banco guarda UUID aleatório, versão do instrumento, versão da apresentação, confirmações de maioridade e participação, UF/código IBGE opcionais, data de envio, hash para reenvio e respostas por pergunta. Não há campos para nome, e-mail, CPF, telefone, IP ou informações do navegador. As respostas não entram em cookies, armazenamento local, URLs ou mensagens de log do aplicativo. A preferência de pausar animações é independente.
 
-Não há endpoint público para ler respostas. A administração atual ocorre no painel D1 ou pela ferramenta autenticada Wrangler. Não foram criados painel administrativo, rastreamento individual, CAPTCHA nem exclusão automática por prazo. Não existe recuperação de respostas da antiga prévia, pois ela não as armazenava.
+Não há endpoint público para ler participações ou respostas individuais. O endpoint de resultados retorna apenas estatísticas agregadas. A administração atual ocorre no painel D1 ou pela ferramenta autenticada Wrangler. Não foram criados painel administrativo, rastreamento individual, CAPTCHA nem exclusão automática por prazo. Não existe recuperação de respostas da antiga prévia, pois ela não as armazenava.
 
 ### Bancos e migrações
 
@@ -86,11 +87,35 @@ npm run db:migrate:production
 
 Esses dois comandos exigem uma sessão Cloudflare autenticada. O build não aplica migrações automaticamente. `npm run start:static` serve apenas os arquivos visuais e não grava respostas. Estado local `.wrangler/` e arquivos `.dev.vars` são ignorados pelo Git.
 
-`dist/_routes.json` limita as Pages Functions a `/api/*`; as três páginas e os recursos permanecem estáticos. `functions/` fica na raiz do repositório e é compilada pelo Pages durante a publicação. O comando de build continua `npm run build`, com saída `dist` e branch principal `main`.
+`dist/_routes.json` limita as Pages Functions a `/api/*`; as quatro páginas e os recursos permanecem estáticos. `functions/` fica na raiz do repositório e é compilada pelo Pages durante a publicação. O comando de build continua `npm run build`, com saída `dist` e branch principal `main`.
 
 ### Verificações
 
 `npm run check` verifica a sintaxe; `npm test` inclui os testes anteriores e os testes da API, SQL, validação, idempotência, concorrência, falha com reversão e reenvio. Os testes SQL usam SQLite em memória no Node.js e também são conferidos no D1 local e de testes antes de ativar a produção. Não use dados reais para testar no banco de produção.
+
+## Mapa e resultados públicos
+
+O menu **Resultados** abre `/resultados/`. O React Simple Maps 5.0.5 foi integrado apenas nessa página, em um componente React isolado; as demais telas mantêm sua arquitetura. `results-build.mjs` usa esbuild para gerar o JavaScript e incluir as licenças em `dist/assets/vendor/RESULTS-LICENSES.txt`. Não há CDN, serviço de mapas externo ou envio de respostas para terceiros.
+
+`assets/brazil-states.json` contém as 27 UFs da malha simplificada oficial do IBGE, obtida pela API de Malhas v3. Fonte e transformações constam em `assets/brazil-states-source.md`. A malha é incorporada ao arquivo JavaScript publicado. Siglas e nomes ficam em `assets/states.mjs`.
+
+O mapa usa uma escala azul contínua e fixa, derivada das cores existentes: mais participações na UF intensificam sua cor sem clarear outras UFs. O mapa inclui somente participações com UF informada; as demais permanecem no total nacional. O número representa envios concluídos, não pessoas únicas nem proporção da população. Seleção por clique, toque, teclado ou lista de UFs mostra somente a contagem daquela UF, sem filtrar respostas.
+
+### Privacidade da divulgação
+
+`GET /api/resultados` executa consultas agregadas no D1 para a versão atual do instrumento. Não retorna UUIDs de participação, municípios, datas individuais, hashes ou registros brutos. Não aceita filtros por UF, cidade, período ou participante. Não faz alterações no banco e não exige nova migração.
+
+O total nacional e as contagens por UF acompanham cada participação confirmada. Os resultados das perguntas são divulgados em grupos completos de cinco participações: 5, 10, 15 e assim por diante. A consulta usa a ordem interna de inserção, sem publicar essa ordem. Entre dois grupos completos, as respostas dos gráficos permanecem estáveis, reduzindo a exposição da contribuição de um envio isolado. Cada pergunta ainda exige pelo menos cinco respostas no conjunto publicado para liberar sua distribuição.
+
+Respostas opcionais são contabilizadas como não respondidas dentro do conjunto publicado. Percentuais de múltipla seleção usam a quantidade de participações que responderam à pergunta como denominador, podendo somar mais de 100%. A escala de 0 a 10 inclui distribuição e média declarada, sem apresentar nota de prova ou gabarito.
+
+### Atualização e interface
+
+A consulta é refeita a cada minuto enquanto a aba está visível, ao retornar à aba e pelo botão **Atualizar**. O servidor envia `Cache-Control: no-store`. Em erro, a interface conserva a última consulta identificada; se não houver consulta anterior, mostra indisponibilidade em vez de números fictícios.
+
+No computador, mapa e respostas aparecem lado a lado. No celular, os botões **Mapa do Brasil** e **Respostas gerais** alternam o card visível. Em telas curtas ou zoom alto, o conteúdo rola dentro dos cards. Os controles têm rótulos acessíveis e as transições respeitam pausa e movimento reduzido.
+
+`tests/results.test.mjs` verifica mapa vazio, contagem com e sem UF, divulgação em grupos de cinco, cálculo dos percentuais e média, ausência de campos identificadores, rejeição de filtros e falha sem estatísticas fictícias. Dados de demonstração devem ser inseridos somente no D1 local ou no banco de testes; a produção usa as participações reais.
 
 ## Curso: uma página contínua, ainda sem conteúdo
 
@@ -147,7 +172,7 @@ O botão do rodapé interrompe também os movimentos contínuos. A preferência 
 
 O build adiciona uma versão por conteúdo aos links CSS/JavaScript e a todos os imports locais, inclusive o Motion. Isso impede misturar módulos antigos e novos no cache do navegador. As páginas HTML recebem `Cache-Control: no-cache` para revalidar a versão publicada; nenhuma configuração de DNS é alterada.
 
-Os testes de animação verificam cancelamento, restauração de estilos e substituição de transições. A validação no navegador cobre as três páginas, diálogos, pesquisa, pausa, navegação rápida e telas menores.
+Os testes de animação verificam cancelamento, restauração de estilos e substituição de transições. A validação no navegador cobre as quatro páginas, diálogos, pesquisa, pausa, navegação rápida e telas menores.
 
 ## Cloudflare
 
