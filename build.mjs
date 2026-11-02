@@ -39,9 +39,12 @@ export async function build() {
   try{assert(!(await lstat(output)).isSymbolicLink(),'A saída não pode ser um link simbólico.');}catch(error){if(error.code!=='ENOENT')throw error;}
   await rm(output,{recursive:true,force:true});await mkdir(output,{recursive:true});
   for(const [route,page] of pages){const target=route==='/404/'?path.join(output,'404.html'):path.join(output,route,'index.html');await mkdir(path.dirname(target),{recursive:true});await writeFile(target,page.html);}
-  const assets=['styles.css','script.js','html.mjs','assets/sketches.svg','assets/story-style.css','assets/fonts','assets/motion.js','assets/survey-model.mjs','assets/survey-view.mjs','assets/survey.css','assets/localities.mjs'];
+  const assets=['styles.css','script.js','html.mjs','assets/sketches.svg','assets/story-style.css','assets/fonts','assets/motion.js','assets/motion-core.mjs','assets/motion.css','assets/survey-model.mjs','assets/survey-view.mjs','assets/survey.css','assets/localities.mjs'];
   if(data.course.status==='published')assets.push('assets/journey.css','assets/lesson-player.mjs','assets/journey-model.mjs');
   for(const file of assets){const target=path.join(output,file);await mkdir(path.dirname(target),{recursive:true});await cp(path.join(projectRoot,file),target,{recursive:true});}
+  const vendor=path.join(output,'assets/vendor');await mkdir(vendor,{recursive:true});
+  await cp(path.join(projectRoot,'node_modules/motion/dist/motion.js'),path.join(vendor,'motion.mjs'));
+  await cp(path.join(projectRoot,'node_modules/motion/LICENSE.md'),path.join(vendor,'MOTION-LICENSE.md'));
   await writeFile(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...pages].filter(([,page])=>!page.noindex).map(([route])=>`<url><loc>${e(data.site.url.replace(/\/$/,'')+route)}</loc></url>`).join('')}</urlset>`);
   await writeFile(path.join(output,'robots.txt'),`User-agent: *\nAllow: /\nSitemap: ${data.site.url}/sitemap.xml\n`);
   await writeFile(path.join(output,'_headers'),'/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n');

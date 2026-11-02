@@ -6,7 +6,7 @@ O visual segue a direção indicada a partir do Story of Stuff: títulos condens
 
 ## Abrir e verificar
 
-Requer Node.js 22 ou mais recente, sem bibliotecas para instalar.
+Requer Node.js 22 ou mais recente. Execute `npm ci` para instalar a versão fixada do Motion antes de iniciar ou gerar o site.
 
 ```text
 npm start
@@ -103,6 +103,16 @@ O modelo será criado depois no Canva, conforme planejado. `course.certificate.s
 Arquivos das versões anteriores foram preservados no código-fonte, mas não são carregados nem copiados para a saída pública quando não fazem parte desta versão. O build recria `dist/` para evitar a permanência das rotas antigas.
 
 As fontes são locais e incluem suas licenças: Barlow Condensed nos títulos e na marca; Manrope na interface; Source Serif 4 nas leituras longas. Não há consulta a serviços de fontes durante a visita.
+
+## Animações com Motion
+
+A biblioteca [Motion](https://motion.dev/docs/quick-start) está fixada em `motion@14.9.0`, com `package-lock.json`. O build copia o bundle oficial para `dist/assets/vendor/motion.mjs`, acompanhado da licença MIT. Não há requisição ao CDN nem dependência de React no navegador. A instalação usa `npm ci`; o restante do site continua estático.
+
+`assets/motion.js` coordena a entrada de títulos e cards, o sublinhado do título, o movimento suave dos desenhos, interações por ponteiro e teclado, abertura dos diálogos e transições direcionais da pesquisa. `assets/motion.css` evita conflitos com os efeitos CSS anteriores, sem alterar a identidade visual. `assets/motion-core.mjs` controla o cancelamento e a restauração dos estilos.
+
+O botão do rodapé interrompe também os movimentos contínuos. A preferência do sistema por movimento reduzido tem prioridade. A animação não bloqueia respostas nem links, não clona formulários e não recebe o estado da pesquisa. Trocas rápidas cancelam os efeitos anteriores; abas ocultas e páginas abandonadas encerram os movimentos. Se o bundle não carregar, a navegação e a pesquisa continuam funcionando.
+
+Os testes de animação verificam cancelamento, restauração de estilos e substituição de transições. A validação no navegador cobre as três páginas, diálogos, pesquisa, pausa, navegação rápida e telas menores.
 
 ## Cloudflare
 

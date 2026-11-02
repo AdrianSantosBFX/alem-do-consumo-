@@ -1,15 +1,16 @@
+import {animateSurvey,animateSelection,animateDialog} from './assets/motion.js';
 import {escapeHtml as e} from './html.mjs';
 import {newSurvey,startSurvey,setConsent,setLocation,selectAnswer,clearAnswer,canContinue,nextQuestion,previousQuestion,answeredCount} from './assets/survey-model.mjs';
 import {renderSurveyIntro} from './assets/survey-view.mjs';
 
-document.querySelectorAll('[data-open-dialog]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.openDialog).showModal()));
+document.querySelectorAll('[data-open-dialog]').forEach(button=>button.addEventListener('click',()=>{const dialog=document.getElementById(button.dataset.openDialog);dialog.showModal();animateDialog(dialog);}));
 document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
 
 const surveyData=document.getElementById('survey-data');
 if(surveyData){
   const {localities}=await import('./assets/localities.mjs');
   const survey=JSON.parse(surveyData.textContent),card=document.getElementById('survey-card'),screen=document.querySelector('.research-screen');
-  let state=newSurvey();
+  let state=newSurvey(),renderedStep=state.step;
   const countLabel=()=>`${answeredCount(state)} respondida${answeredCount(state)===1?'':'s'}`;
   const actions=label=>`<div class="survey-actions"><button type="button" class="text-link" data-previous-question>← Anterior</button><button class="button" type="submit">${label} <span aria-hidden="true">→</span></button></div>`;
   function render({focus=true}={}){
@@ -27,6 +28,8 @@ if(surveyData){
       card.innerHTML=`<div class="survey-progress"><span>Pergunta ${state.step+1} de ${survey.questions.length}</span><span id="answered-count">${countLabel()}</span></div><progress max="${survey.questions.length}" value="${state.step}" aria-label="Perguntas percorridas"></progress><p class="eyebrow survey-section">${e(section.title)}</p><form id="question-form" autocomplete="off"><fieldset aria-describedby="question-hint question-error"><legend><h2 tabindex="-1">${e(q.title)}</h2></legend><p class="survey-hint" id="question-hint">${hint} Resposta opcional.</p><div class="survey-options${q.type==='scale'?' survey-scale':''}">${options.map((option,i)=>{const value=q.type==='scale'?option:i;const checked=q.type==='multiple'?answer?.includes(value):answer===value;return `<label class="survey-option"><input type="${q.type==='multiple'?'checkbox':'radio'}" name="answer" value="${value}"${checked?' checked':''}><span>${e(String(option))}</span></label>`;}).join('')}</div></fieldset><p id="question-error" class="survey-error" role="alert" aria-atomic="true"></p><button class="text-link survey-clear" type="button" data-clear-answer${answer===undefined||Array.isArray(answer)&&!answer.length?' disabled':''}>Limpar resposta</button>${actions(state.step===survey.questions.length-1?'Concluir pesquisa':'Próxima')}</form><p class="survey-local-note">Você pode seguir sem responder. Nenhuma resposta é enviada ou armazenada.</p>`;
     }
     card.scrollTop=0;
+    const direction=state.step<renderedStep?-1:1;renderedStep=state.step;
+    if(focus)animateSurvey(card,{direction});
     if(focus)card.querySelector('h2').focus({preventScroll:true});
   }
   function renderCities(){
@@ -52,7 +55,8 @@ if(surveyData){
     if(input.name!=='answer')return;
     const next=selectAnswer(survey,state,Number(input.value));
     card.querySelector('#question-error').textContent=next===state?`Você pode selecionar até ${survey.questions[state.step].maxSelections} alternativas. Desmarque uma para escolher outra.`:'';
-    state=next;updateAnswerUI();
+    const invalid=next===state;state=next;updateAnswerUI();
+    animateSelection(input.closest('.survey-option'),{invalid});
   });
   card.addEventListener('submit',event=>{
     // Prevent native form navigation even when optional answers are blank.

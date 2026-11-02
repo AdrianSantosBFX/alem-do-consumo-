@@ -1,0 +1,11 @@
+/* Motion enhances the existing layouts, colours and type; content is visible by default. */
+[data-motion-ready=true] .screen{animation:none}
+[data-motion-ready=true][data-motion=on] .destination-card,
+[data-motion-ready=true][data-motion=on] .button{transition-property:background-color,border-color,box-shadow}
+[data-motion-ready=true][data-motion=on] .destination-card:hover{transform:none}
+[data-motion-ready=true] .card-doodle{transition:none;transform-origin:center}
+.survey-card #question-form fieldset{overflow-x:hidden}
+[data-motion-ready=true][data-motion=on] .destination-card:hover .card-doodle{transform:rotate(5deg)}
+.project-screen h1>span::after{transform:rotate(-1.5deg) scaleX(var(--underline-progress,1));transform-origin:left center}
+[data-motion=off] .destination-card:hover,[data-motion=off] .destination-card:hover .card-doodle,[data-motion=off] .destination-card:hover .card-arrow,[data-motion=off] .text-link:hover span{transform:none}
+@media(prefers-reduced-motion:reduce){.destination-card:hover,.destination-card:hover .card-doodle,.destination-card:hover .card-arrow,.text-link:hover span{transform:none!important}}
