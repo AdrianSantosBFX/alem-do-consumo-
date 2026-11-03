@@ -28,7 +28,7 @@ O build gera `dist/`. O arquivo `index.html` na raiz também é atualizado autom
 - `/`: apresentação do projeto, dois cards de acesso e informações da iniciativa em diálogo.
 - `/pesquisa/`: questionário diagnóstico com 14 perguntas opcionais em quatro seções, uma por vez. Permite responder, avançar, voltar, limpar e recomeçar.
 - `/curso/`: card de apresentação do curso e explicação do formato previsto.
-- `/resultados/`: mapa de participações por UF e resultados nacionais das 14 perguntas, sem registros individuais.
+- `/resultados/`: panorama interpretativo das 14 perguntas, com indicadores, quatro temas e mapa de participações por UF, sem registros individuais.
 - `404.html`: página para endereços inexistentes.
 
 Não há menus, páginas públicas ou links para Materiais e Publicações. A antiga apresentação demonstrativa do curso e as páginas de módulos não são publicadas.
@@ -107,13 +107,17 @@ O mapa usa uma escala azul contínua e fixa, derivada das cores existentes: mais
 
 O total nacional e as contagens por UF acompanham cada participação confirmada. Os resultados das perguntas são divulgados em grupos completos de cinco participações: 5, 10, 15 e assim por diante. A consulta usa a ordem interna de inserção, sem publicar essa ordem. Entre dois grupos completos, as respostas dos gráficos permanecem estáveis, reduzindo a exposição da contribuição de um envio isolado. Cada pergunta ainda exige pelo menos cinco respostas no conjunto publicado para liberar sua distribuição.
 
-Respostas opcionais são contabilizadas como não respondidas dentro do conjunto publicado. Percentuais de múltipla seleção usam a quantidade de participações que responderam à pergunta como denominador, podendo somar mais de 100%. A escala de 0 a 10 inclui distribuição e média declarada, sem apresentar nota de prova ou gabarito.
+Respostas opcionais são contabilizadas como não respondidas dentro do conjunto publicado. Percentuais de múltipla seleção usam a quantidade de participações que responderam à pergunta como denominador, podendo somar mais de 100%. A API mantém a distribuição da escala de 0 a 10; o panorama destaca sua média declarada, sem tratá-la como nota de prova.
 
 ### Atualização e interface
 
 A consulta é refeita a cada minuto enquanto a aba está visível, ao retornar à aba e pelo botão **Atualizar**. O servidor envia `Cache-Control: no-store`. Em erro, a interface conserva a última consulta identificada; se não houver consulta anterior, mostra indisponibilidade em vez de números fictícios.
 
-No computador, mapa e respostas aparecem lado a lado. No celular, os botões **Mapa do Brasil** e **Respostas gerais** alternam o card visível. Em telas curtas ou zoom alto, o conteúdo rola dentro dos cards. Os controles têm rótulos acessíveis e as transições respeitam pausa e movimento reduzido.
+A página apresenta uma síntese automática das frequências, três indicadores (conhecimento declarado, compras não planejadas e responsabilidade compartilhada) e quatro blocos: hábitos, dificuldades, conhecimento socioambiental e interesses. O seletor de perguntas foi removido. No computador, o mapa acompanha os temas em uma coluna lateral; no celular, todos os blocos aparecem em sequência. A área principal tem rolagem contínua, sem rolagem interna dos cards. Os controles têm rótulos acessíveis e as transições respeitam pausa e movimento reduzido.
+
+`assets/results-model.mjs` calcula a leitura a partir dos dados agregados já publicados. Os indicadores combinados usam contagens de alternativas exclusivas da mesma pergunta, nunca somas de múltiplas escolhas. Rankings preservam empates, inclusive na terceira posição. A comparação de conhecimento só sugere temas a aprofundar quando as cinco perguntas têm base suficiente; a alternativa de referência é identificada na explicação de cada barra. Não se calcula uma nota individual ou um índice geral de sustentabilidade.
+
+A interpretação descreve apenas o grupo participante e não atribui causas nem representatividade populacional. Bases e omissões acompanham cada indicador; as perguntas opcionais podem ter denominadores diferentes. Bases insuficientes mantêm traços e textos de espera. Os testes adicionais verificam empates, percentuais combinados sem erro de arredondamento, zeros reais, bases diferentes e bloqueio da comparação incompleta.
 
 `tests/results.test.mjs` verifica mapa vazio, contagem com e sem UF, divulgação em grupos de cinco, cálculo dos percentuais e média, ausência de campos identificadores, rejeição de filtros e falha sem estatísticas fictícias. Dados de demonstração devem ser inseridos somente no D1 local ou no banco de testes; a produção usa as participações reais.
 

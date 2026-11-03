@@ -33,7 +33,7 @@ A saída estática fica em `dist/`, que é gerada localmente e não é versionad
 
 - Identidade visual própria, com marca tipográfica e ilustrações em traço preto.
 - Pesquisa com 14 perguntas opcionais, quatro seções, confirmação de maioridade e localização opcional com municípios. O preenchimento fica na memória até o envio final; as respostas confirmadas são gravadas no D1. Falhas preservam o preenchimento e permitem tentar novamente.
-- Resultados com mapa do Brasil por UF e gráficos nacionais das 14 perguntas; atualização automática a cada minuto e divulgação em grupos de cinco.
+- Resultados com panorama interpretativo nacional: síntese dos achados, três indicadores e quatro blocos temáticos, com mapa do Brasil por UF; atualização automática a cada minuto e divulgação em grupos de cinco.
 - Curso, prova e certificado em preparação, sem conteúdos ou emissão simulados.
 - HTML, CSS e JavaScript, com Pages Function para recebimento anônimo e Cloudflare D1.
 - Animações com Motion: entradas em sequência, interações dos cards e transições da pesquisa. Biblioteca servida localmente, com pausa e preferência de movimento reduzido.
