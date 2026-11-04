@@ -1,5 +1,5 @@
 // State and progression rules, kept independent from the browser for verification.
-const interactive = block => ['quiz','checkpoint'].includes(block.type);
+export const interactive = block => ['quiz','checkpoint','scenario','sort-game'].includes(block.type);
 export const activityResult = (block, record) => {
   const total = block.questions.length;
   const correct = block.questions.reduce((sum,q,index)=>sum+(record?.values?.[index]===q.answer?1:0),0);

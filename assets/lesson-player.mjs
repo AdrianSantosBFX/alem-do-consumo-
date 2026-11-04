@@ -1,4 +1,6 @@
 import {restoreJourney,activityResult,canAdvance,submitActivity,finishChapter} from './journey-model.mjs';
+import {createSequence} from './course-activities.mjs';
+import {initCertificate} from './certificate.mjs';
 
 const host=document.querySelector('[data-journey]');
 if(host) {
@@ -10,6 +12,15 @@ if(host) {
   const chapters=[...host.querySelectorAll('.journey-chapter')];
   const links=[...host.querySelectorAll('[data-journey-link]')];
   const forms=[...host.querySelectorAll('[data-activity]')];
+  const sequences=[...host.querySelectorAll('[data-sequence]')].map(node=>{
+    const block=definition.chapters.flatMap(chapter=>chapter.blocks).find(item=>item.id===node.dataset.sequence);
+    return createSequence(node,block,{
+      getRecord:()=>state.answers[block.id],
+      getCompleted:()=>state.done.includes(definition.chapters.find(chapter=>chapter.blocks.some(item=>item.id===block.id)).id),
+      submit:values=>{state=submitActivity(definition,state,block.id,values);save();refresh();}
+    });
+  });
+  const certificate=initCertificate(host,definition,()=>state);
   const outline=host.querySelector('.journey-outline');
   const smallScreen=matchMedia('(max-width: 800px)');
   outline.open=!smallScreen.matches;
@@ -71,6 +82,8 @@ if(host) {
     host.querySelector('.journey-storage').textContent=storageAvailable?'Progresso salvo só neste navegador.':'Não foi possível salvar neste navegador. Seu progresso vale apenas durante esta visita.';
     host.querySelector('.journey-finished').hidden=state.done.length!==chapters.length;
     forms.forEach(form=>showActivity(form,definition.chapters.flatMap(c=>c.blocks).find(b=>b.id===form.dataset.activity)));
+    sequences.forEach(sequence=>sequence.refresh());
+    certificate.refresh();
     resume.hidden=state.done.length===0||state.done.length===chapters.length;
   }
   function moveTo(node) {

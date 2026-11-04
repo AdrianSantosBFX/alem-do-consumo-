@@ -10,7 +10,7 @@ const results=await readFile(path.join(projectRoot,'templates/results.html'),'ut
 const pages=createPages(data,layout,home,results);
 
 test('O Projeto, Pesquisa, Curso e Resultados são gerados como destinos públicos',()=>{
-  assert.deepEqual([...pages.keys()],['/','/pesquisa/','/curso/','/resultados/','/404/']);
+  assert.deepEqual([...pages.keys()],['/','/pesquisa/','/curso/','/curso/consumo-sustentavel/','/resultados/','/404/']);
   for(const [route,{html}]of pages){const nav=html.match(/<nav aria-label="Navegação principal">([\s\S]*?)<\/nav>/)[1];assert.match(nav,/>O Projeto</);assert.match(nav,/>Pesquisa</);assert.match(nav,/>Curso</);assert.match(nav,/>Resultados</);assert.doesNotMatch(nav,/Materiais|Publicações|Aprenda|Sobre/);assert.equal([...nav.matchAll(/aria-current="page"/g)].length,route==='/404/'?0:1);}
 });
 test('O nome do projeto é uma marca tipográfica, sem ícone no cabeçalho',()=>{
@@ -18,9 +18,9 @@ test('O nome do projeto é uma marca tipográfica, sem ícone no cabeçalho',()=
   assert.doesNotMatch(header,/<svg|<img|brand-symbol/);assert.match(header,/além do consumo/);
   assert.match(home,/destination-card research-destination/);assert.match(home,/destination-card course-destination/);
 });
-test('Rascunhos não geram um curso ou certificado funcional',()=>{
-  assert.ok(!pages.has('/curso/consumo-sustentavel/'));
-  const html=pages.get('/curso/').html;assert.match(html,/As aulas ainda estão sendo preparadas/);assert.doesNotMatch(html,/Iniciar curso|download=/);
+test('Curso disponível tem acesso à jornada e certificado sem cadastro',()=>{
+  assert.ok(pages.has('/curso/consumo-sustentavel/'));
+  const html=pages.get('/curso/').html;assert.match(html,/Iniciar curso/);assert.doesNotMatch(html,/As aulas ainda estão sendo preparadas|download=/);
   assert.doesNotMatch(pages.get('/').html,/publicacoes\/|materiais\/|aprenda\//);
 });
 test('Páginas preservam metadados, um h1, diálogos e links internos válidos',async()=>{
@@ -33,7 +33,8 @@ test('Páginas preservam metadados, um h1, diálogos e links internos válidos',
 test('Saída enxuta não publica rotas ou recursos antigos',async()=>{
   const output=path.join(projectRoot,'dist');
   for(const file of ['index.html','pesquisa/index.html','curso/index.html','404.html','assets/story-style.css','assets/sketches.svg','assets/fonts/barlow-condensed-extrabold.ttf'])await access(path.join(output,file));
-  for(const file of ['materiais','publicacoes','aprenda','assets/editorial.css','assets/hero-original.png','assets/lesson-player.mjs'])await assert.rejects(access(path.join(output,file)));
-  const map=await readFile(path.join(output,'sitemap.xml'),'utf8');assert.equal([...map.matchAll(/<loc>/g)].length,4);
+  for(const file of ['materiais','publicacoes','aprenda','assets/editorial.css','assets/hero-original.png'])await assert.rejects(access(path.join(output,file)));
+  for(const file of ['assets/lesson-player.mjs','assets/course-activities.mjs','assets/journey-model.mjs','assets/journey.css'])await access(path.join(output,file));
+  const map=await readFile(path.join(output,'sitemap.xml'),'utf8');assert.equal([...map.matchAll(/<loc>/g)].length,5);
   const css=await readFile(path.join(projectRoot,'styles.css'),'utf8');assert.match(css,/height:100svh/);assert.match(css,/\.page-journey\{height:auto/);
 });

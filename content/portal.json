@@ -6,14 +6,361 @@
   },
   "course": {
     "id": "consumo-sustentavel",
-    "version": 1,
+    "version": 2,
     "title": "Consumo Sustentável",
-    "description": "Uma jornada contínua de leitura e atividades, com objetivos desbloqueados por etapas e uma prova final.",
-    "status": "draft",
-    "chapters": [],
-    "exam": null,
+    "description": "Em cerca de 10 minutos, acompanhe o caminho dos produtos, experimente escolhas do cotidiano e descubra como consumir com mais consciência.",
+    "status": "published",
+    "durationMin": 10,
     "certificate": {
-      "status": "planned"
+      "status": "enabled"
+    },
+    "references": [
+      {
+        "title": "O que é consumo sustentável — Ministério do Meio Ambiente",
+        "url": "https://www.gov.br/mma/pt-br/assuntos/educacao-ambiental/glossario-ea/o-que-e-consumo-sustentavel"
+      },
+      {
+        "title": "The Story of Stuff — filme e materiais de referência",
+        "url": "https://www.storyofstuff.org/movies/story-of-stuff/"
+      },
+      {
+        "title": "Reduzir, reutilizar e reciclar — Prefeitura de Belo Horizonte",
+        "url": "https://prefeitura.pbh.gov.br/slu/informacoes/servicos/3Rs"
+      },
+      {
+        "title": "Descarte de eletroeletrônicos — SINIR",
+        "url": "https://www.sinir.gov.br/perfis/logistica-reversa/logistica-reversa/eletroeletronicos/"
+      }
+    ],
+    "chapters": [
+      {
+        "id": "um-novo-olhar",
+        "kind": "intro",
+        "title": "Toda escolha tem uma história",
+        "minutes": 0.5,
+        "theme": "hero",
+        "subtitle": "Um curso curto para olhar além da etiqueta de preço.",
+        "summary": "Você começou a olhar para o consumo antes, durante e depois da compra.",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "Pense no último produto que você comprou. O que levou até ele: necessidade, vontade, uma promoção? Aqui, vamos seguir a história de um produto e experimentar decisões possíveis no dia a dia. Não existe uma compra sem impacto nem uma solução igual para todas as pessoas."
+          },
+          {
+            "type": "cards",
+            "title": "Ao final, você será capaz de…",
+            "items": [
+              {
+                "title": "Reconhecer impactos",
+                "text": "Perceber que a história de um produto começa antes da compra e continua depois do uso."
+              },
+              {
+                "title": "Comparar escolhas",
+                "text": "Considerar necessidade, durabilidade, possibilidade de reparo e destino do produto."
+              },
+              {
+                "title": "Agir no cotidiano",
+                "text": "Escolher uma mudança possível e reconhecer o papel de empresas e governos."
+              }
+            ]
+          },
+          {
+            "type": "highlight",
+            "text": "Explore os cards, participe das atividades e avance no seu ritmo. A duração de 10 minutos é estimada; não há cronômetro. Na avaliação final, acerte pelo menos 3 de 4 questões. Você poderá tentar novamente."
+          }
+        ]
+      },
+      {
+        "id": "caminho-dos-produtos",
+        "kind": "interaction",
+        "title": "Antes e depois da vitrine",
+        "minutes": 1.5,
+        "theme": "light",
+        "subtitle": "Acompanhe o caminho de uma camiseta. Abra cada etapa para explorar.",
+        "summary": "Matérias-primas, produção, transporte, uso e descarte fazem parte da mesma história.",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "A camiseta não surge na loja. Sua produção envolve materiais, energia, água, trabalho e transporte. Depois da compra, o tempo de uso e o destino escolhido também importam. Olhar esse caminho ajuda a perceber impactos que a etiqueta não mostra."
+          },
+          {
+            "type": "cards",
+            "title": "Cinco partes de uma mesma história",
+            "items": [
+              {
+                "title": "Matérias-primas",
+                "text": "Fibras e outros materiais vêm de recursos naturais. Obter essas matérias-primas pode transformar territórios e afetar comunidades."
+              },
+              {
+                "title": "Produção",
+                "text": "Transformar os materiais exige recursos e trabalho. As condições de quem produz também fazem parte da avaliação socioambiental."
+              },
+              {
+                "title": "Distribuição",
+                "text": "Os produtos percorrem distâncias até chegar às lojas. Os meios de transporte e as embalagens entram nessa história."
+              },
+              {
+                "title": "Uso",
+                "text": "Cuidar da camiseta, reparar um rasgo e continuar usando uma peça em bom estado pode adiar uma nova compra."
+              },
+              {
+                "title": "Depois do uso",
+                "text": "Uma peça utilizável pode continuar com outra pessoa. Quando isso não é possível, é preciso conhecer as opções de destinação disponíveis."
+              }
+            ]
+          },
+          {
+            "type": "flashcards",
+            "title": "Vire a ideia",
+            "items": [
+              {
+                "title": "O impacto começa quando eu compro?",
+                "text": "Não. A obtenção dos materiais, a fabricação e o transporte já aconteceram antes de o produto chegar até você."
+              },
+              {
+                "title": "Reciclar resolve tudo?",
+                "text": "Não. Reduzir compras desnecessárias e prolongar o uso também importam. A reciclagem é uma parte do caminho."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "pausa-antes-da-compra",
+        "kind": "activity",
+        "title": "Uma pausa antes do clique",
+        "minutes": 1.5,
+        "theme": "white",
+        "subtitle": "Uma situação comum. Três caminhos. Qual você escolheria?",
+        "summary": "Uma promoção pode ser uma oportunidade, mas não define sozinha uma necessidade.",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "Separar desejo de necessidade não exige abandonar tudo de que você gosta. Uma pausa permite comparar a oferta com o que já possui, o uso que fará do produto e os recursos disponíveis. Preço importa, mas uma compra que parece barata pode ter pouca utilidade."
+          },
+          {
+            "type": "scenario",
+            "id": "escolha-da-mochila",
+            "title": "A oferta termina hoje",
+            "context": "Situação fictícia · uma mensagem no celular",
+            "character": "Lia",
+            "situation": "Minha mochila está funcionando bem. Vi outra com desconto e a mensagem diz “últimas unidades”. Estou com vontade de comprar agora.",
+            "minScore": 1,
+            "questions": [
+              {
+                "prompt": "Qual resposta ajuda Lia a tomar uma decisão mais consciente?",
+                "options": [
+                  "Comprar imediatamente, porque o desconto torna a compra necessária.",
+                  "Fazer uma pausa, avaliar o que falta na mochila atual e decidir se a compra tem utilidade.",
+                  "Comprar a nova e descartar a atual, porque trocar sempre evita problemas."
+                ],
+                "answer": 1,
+                "explanation": "A urgência do anúncio não demonstra uma necessidade. Comparar o uso real e o que já existe ajuda a decidir com mais informação.",
+                "feedback": [
+                  "O desconto muda o preço, mas não mostra se Lia precisa de outra mochila. Experimente considerar primeiro o uso.",
+                  "A pausa permite avaliar a necessidade sem tomar a urgência do anúncio como motivo suficiente.",
+                  "Descartar um produto que atende à necessidade antecipa sua substituição. Vale aproveitar o que já está em boas condições."
+                ]
+              }
+            ]
+          },
+          {
+            "type": "highlight",
+            "text": "Antes de confirmar: preciso disso agora? Posso usar o que já tenho, pedir emprestado ou reparar? Se comprar, o produto será útil e poderá durar?"
+          }
+        ]
+      },
+      {
+        "id": "mais-tempo-de-uso",
+        "kind": "activity",
+        "title": "Mais uso, menos descarte",
+        "minutes": 2,
+        "theme": "blue",
+        "subtitle": "Um minijogo para transformar a ideia em decisões.",
+        "summary": "Reparo, reuso e compras bem avaliadas podem prolongar o uso dos produtos.",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "Reduzir é evitar o que não precisa ser comprado ou desperdiçado. Reutilizar é dar continuidade ao uso. Reciclar é transformar resíduos em materiais para novos processos. Consertar pode ajudar a prolongar a vida útil, desde que seja viável e seguro."
+          },
+          {
+            "type": "sort-game",
+            "id": "desafio-do-uso",
+            "title": "Prolonga o uso ou antecipa o descarte?",
+            "minScore": 0.75,
+            "questions": [
+              {
+                "prompt": "Uma calça está em bom estado, mas perdeu um botão. Você decide repará-la.",
+                "options": [
+                  "Prolonga o uso",
+                  "Antecipa o descarte"
+                ],
+                "answer": 0,
+                "explanation": "Um reparo simples permite continuar usando a peça em vez de substituí-la por esse motivo."
+              },
+              {
+                "prompt": "Um aparelho atende às suas necessidades. Você o descarta apenas porque saiu uma cor nova.",
+                "options": [
+                  "Prolonga o uso",
+                  "Antecipa o descarte"
+                ],
+                "answer": 1,
+                "explanation": "A mudança de aparência não impede o uso do aparelho atual. A troca antecipa o descarte de algo funcional."
+              },
+              {
+                "prompt": "Você oferece um móvel em bom estado a alguém que precisa dele e aceita recebê-lo.",
+                "options": [
+                  "Prolonga o uso",
+                  "Antecipa o descarte"
+                ],
+                "answer": 0,
+                "explanation": "O móvel continua cumprindo sua função. Doar exige considerar o estado e a utilidade para quem recebe."
+              },
+              {
+                "prompt": "Você joga fora um produto reparável sem verificar o defeito ou as opções de conserto.",
+                "options": [
+                  "Prolonga o uso",
+                  "Antecipa o descarte"
+                ],
+                "answer": 1,
+                "explanation": "Verificar as condições de reparo ajuda a avaliar a substituição. Isso não significa consertar a qualquer custo ou sem segurança."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "responsabilidade-compartilhada",
+        "kind": "content",
+        "title": "Essa mudança é coletiva",
+        "minutes": 1.5,
+        "theme": "light",
+        "subtitle": "Escolhas individuais precisam encontrar condições para acontecer.",
+        "summary": "Consumidores, empresas e poder público têm papéis diferentes e complementares.",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "Nem todas as pessoas têm as mesmas opções de preço, tempo, transporte ou acesso à informação. O consumo sustentável também depende de produtos duráveis, condições de trabalho adequadas e serviços de coleta. Reconhecer essas condições evita colocar toda a responsabilidade em quem compra."
+          },
+          {
+            "type": "accordion",
+            "title": "Quem pode agir?",
+            "items": [
+              {
+                "title": "Quem consome",
+                "text": "Pode avaliar necessidades, cuidar dos produtos e procurar o destino adequado para aquilo que não pode mais usar, dentro das possibilidades disponíveis."
+              },
+              {
+                "title": "Quem produz e vende",
+                "text": "Pode oferecer informação clara, produtos duráveis e reparáveis, condições de produção responsáveis e canais para receber produtos após o uso."
+              },
+              {
+                "title": "Poder público e ação coletiva",
+                "text": "Políticas, infraestrutura, fiscalização e participação social ajudam a criar condições para produzir, consumir e destinar resíduos de forma mais responsável."
+              }
+            ]
+          },
+          {
+            "type": "highlight",
+            "text": "Eletrônicos que não podem mais ser utilizados precisam de destinação apropriada. Consulte os pontos de recebimento indicados pelo SINIR e confirme quais materiais são aceitos. Eles não devem ir para o lixo doméstico comum."
+          },
+          {
+            "type": "quiz",
+            "id": "responsabilidade",
+            "title": "Uma ideia para guardar",
+            "questions": [
+              {
+                "prompt": "Reduzir os impactos do consumo depende apenas de escolhas individuais.",
+                "options": [
+                  "Verdadeiro",
+                  "Falso"
+                ],
+                "answer": 1,
+                "explanation": "As escolhas pessoais são uma parte. Empresas e poder público também precisam atuar nas condições de produção, informação e destinação."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "seu-proximo-passo",
+        "kind": "interaction",
+        "title": "Leve uma ideia para a semana",
+        "minutes": 0.5,
+        "theme": "white",
+        "subtitle": "Uma ação possível é um bom começo.",
+        "summary": "Você definiu um caminho possível para experimentar no cotidiano.",
+        "blocks": [
+          {
+            "type": "text",
+            "text": "Pense em uma mudança que cabe na sua rotina. Não precisa comprar algo novo para começar. Escolha uma das propostas abaixo, abra o card e pense em quando poderá colocá-la em prática."
+          },
+          {
+            "type": "cards",
+            "title": "Qual delas faz sentido para você?",
+            "items": [
+              {
+                "title": "Pausar uma compra",
+                "text": "Na próxima oferta, verifique primeiro se algo que você já tem atende à mesma necessidade."
+              },
+              {
+                "title": "Cuidar de um produto",
+                "text": "Escolha um objeto que você usa e identifique um cuidado ou reparo viável para continuar aproveitando-o."
+              },
+              {
+                "title": "Encontrar um destino",
+                "text": "Para um eletrônico sem possibilidade de uso, procure um ponto que aceite o material e confira as orientações de entrega."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "exam": {
+      "minutes": 2.5,
+      "minScore": 0.75,
+      "questions": [
+        {
+          "prompt": "Para avaliar uma camiseta, qual olhar é mais completo?",
+          "options": [
+            "Considerar apenas o preço e a aparência.",
+            "Considerar materiais, produção, transporte, uso e destino após o uso.",
+            "Considerar somente se a embalagem pode ser reciclada."
+          ],
+          "answer": 1,
+          "explanation": "O caminho inteiro ajuda a enxergar impactos ambientais e sociais que não aparecem apenas no preço ou na embalagem."
+        },
+        {
+          "prompt": "Um produto ainda funciona e atende à sua necessidade. Surge uma promoção de um modelo novo. O que vale fazer primeiro?",
+          "options": [
+            "Comprar porque toda promoção representa uma necessidade.",
+            "Descartar o atual para abrir espaço.",
+            "Avaliar a necessidade da troca e as possibilidades de continuar usando o atual."
+          ],
+          "answer": 2,
+          "explanation": "A oferta não demonstra, sozinha, a necessidade da troca. Avaliar o uso e a durabilidade ajuda a decidir."
+        },
+        {
+          "prompt": "Um equipamento eletrônico não tem mais possibilidade de uso. Qual encaminhamento é adequado?",
+          "options": [
+            "Consultar um ponto de recebimento apropriado e confirmar o que ele aceita.",
+            "Colocar no lixo doméstico comum.",
+            "Deixar em um terreno vazio para alguém recolher."
+          ],
+          "answer": 0,
+          "explanation": "Sistemas de recebimento e logística reversa dão um caminho apropriado aos eletrônicos. Confirme as orientações do ponto escolhido."
+        },
+        {
+          "prompt": "Qual afirmação descreve melhor a responsabilidade pelos impactos do consumo?",
+          "options": [
+            "Apenas os consumidores precisam mudar.",
+            "As empresas não participam das soluções.",
+            "Consumidores, empresas e poder público têm papéis complementares."
+          ],
+          "answer": 2,
+          "explanation": "Escolhas pessoais importam, assim como a forma de produzir, informar, oferecer alternativas e organizar a destinação."
+        }
+      ]
     }
   },
   "survey": {

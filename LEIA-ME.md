@@ -1,6 +1,6 @@
 # Além do Consumo — versão enxuta
 
-Quatro destinos: **O Projeto**, **Pesquisa**, **Curso sobre Consumo Sustentável** e **Resultados**. A apresentação de cada página usa uma tela. O conteúdo do curso será uma exceção: uma única jornada vertical, com objetivos, atividades e prova final.
+Quatro destinos: **O Projeto**, **Pesquisa**, **Curso sobre Consumo Sustentável** e **Resultados**. A apresentação de cada página usa uma tela. O conteúdo do curso é uma exceção: uma única jornada vertical, com objetivos, atividades e prova final.
 
 O visual segue a direção indicada a partir do Story of Stuff: títulos condensados, branco predominante e desenhos próprios em traço preto. A identidade mantém o azul do Além do Consumo. O nome do projeto aparece como marca tipográfica, sem ícone no cabeçalho.
 
@@ -21,19 +21,20 @@ npm test
 npm run build
 ```
 
-O build gera `dist/`. O arquivo `index.html` na raiz também é atualizado automaticamente e não deve ser editado manualmente. Os testes usam dados controlados sem publicar aulas ou uma prova de exemplo.
+O build gera `dist/`. O arquivo `index.html` na raiz também é atualizado automaticamente e não deve ser editado manualmente. Os testes usam dados controlados para conferir pesquisa, conteúdo, navegação e regras de aprendizagem.
 
 ## Estado da entrega
 
 - `/`: apresentação do projeto, dois cards de acesso e informações da iniciativa em diálogo.
 - `/pesquisa/`: questionário diagnóstico com 14 perguntas opcionais em quatro seções, uma por vez. Permite responder, avançar, voltar, limpar e recomeçar.
-- `/curso/`: card de apresentação do curso e explicação do formato previsto.
+- `/curso/`: apresentação do curso e acesso à jornada de 10 minutos.
+- `/curso/consumo-sustentavel/`: sete etapas de leitura, exploração, prática e avaliação final.
 - `/resultados/`: panorama interpretativo das 14 perguntas, com indicadores, quatro temas e mapa de participações por UF, sem registros individuais.
 - `404.html`: página para endereços inexistentes.
 
 Não há menus, páginas públicas ou links para Materiais e Publicações. A antiga apresentação demonstrativa do curso e as páginas de módulos não são publicadas.
 
-As telas usam a altura da janela. Em condições excepcionais de tela muito baixa ou zoom elevado, o conteúdo pode rolar dentro da área principal ou do card para preservar a leitura. A jornada do curso, quando publicada, usa rolagem vertical da página inteira.
+As telas usam a altura da janela. Em condições excepcionais de tela muito baixa ou zoom elevado, o conteúdo pode rolar dentro da área principal ou do card para preservar a leitura. A jornada do curso usa rolagem vertical da página inteira.
 
 ## Pesquisa com Cloudflare D1
 
@@ -87,7 +88,7 @@ npm run db:migrate:production
 
 Esses dois comandos exigem uma sessão Cloudflare autenticada. O build não aplica migrações automaticamente. `npm run start:static` serve apenas os arquivos visuais e não grava respostas. Estado local `.wrangler/` e arquivos `.dev.vars` são ignorados pelo Git.
 
-`dist/_routes.json` limita as Pages Functions a `/api/*`; as quatro páginas e os recursos permanecem estáticos. `functions/` fica na raiz do repositório e é compilada pelo Pages durante a publicação. O comando de build continua `npm run build`, com saída `dist` e branch principal `main`.
+`dist/_routes.json` limita as Pages Functions a `/api/*`; as páginas e os recursos permanecem estáticos. `functions/` fica na raiz do repositório e é compilada pelo Pages durante a publicação. O comando de build continua `npm run build`, com saída `dist` e branch principal `main`.
 
 ### Verificações
 
@@ -121,32 +122,43 @@ A interpretação descreve apenas o grupo participante e não atribui causas nem
 
 `tests/results.test.mjs` verifica mapa vazio, contagem com e sem UF, divulgação em grupos de cinco, cálculo dos percentuais e média, ausência de campos identificadores, rejeição de filtros e falha sem estatísticas fictícias. Dados de demonstração devem ser inseridos somente no D1 local ou no banco de testes; a produção usa as participações reais.
 
-## Curso: uma página contínua, ainda sem conteúdo
+## Curso: cerca de 10 minutos, em uma jornada contínua
 
-Em `course`, mantenha `status: "draft"`, `chapters: []` e `exam: null` enquanto o conteúdo estiver sendo desenvolvido. O card informa que o curso está em preparação e não oferece um botão de início sem aulas.
+O curso está disponível em `/curso/consumo-sustentavel/`, com acesso pelo card de `/curso/`. A estrutura segue a dinâmica do player Universidade Contabilita v0.2.1 fornecido como referência: jornada vertical, desbloqueio sequencial, exploração, prática, feedback e retomada. O conteúdo e a identidade visual são próprios do Além do Consumo.
 
-A estrutura de etapas interativas existente foi preservada em `learning.mjs`, `assets/journey-model.mjs` e `assets/lesson-player.mjs`. Uma etapa pode conter texto, destaque, cartões, acordeões, passos, perguntas e checkpoints. As etapas anteriores podem ser revisitadas; as seguintes são desbloqueadas conforme a conclusão das atividades obrigatórias.
+`content/portal.json` contém o curso na versão 2, com duração estimada de 10 minutos. Não há limite de tempo. A estimativa cobre leitura e participação; a duração real varia com o ritmo e as tentativas.
 
-Quando for criar o conteúdo, use `course.chapters` como lista única de etapas. Cada etapa possui `id`, `kind`, `title`, opcionalmente `subtitle` e `summary`, e `blocks`. Os tipos de etapa são `intro`, `content`, `interaction`, `activity` e `checkpoint`.
+| Etapa | Dinâmica | Tempo estimado |
+| --- | --- | --- |
+| Toda escolha tem uma história | Abertura e objetivos em cards | 30 s |
+| Antes e depois da vitrine | Caminho de um produto e cards de perguntas | 1,5 min |
+| Uma pausa antes do clique | Cenário de decisão sobre uma promoção | 1,5 min |
+| Mais uso, menos descarte | Classificação de quatro decisões | 2 min |
+| Essa mudança é coletiva | Leitura, acordeões e verdadeiro ou falso | 1,5 min |
+| Leve uma ideia para a semana | Reflexão sobre uma ação possível | 30 s |
+| Seu olhar em prática | Avaliação final de quatro questões | 2,5 min |
 
-Exemplo de estrutura de rascunho, para substituir por conteúdo real:
+O cenário e a atividade de verdadeiro ou falso precisam de uma resposta correta. O minijogo e a avaliação final exigem três acertos em quatro questões. Em erro, o participante recebe explicação e pode tentar novamente. Cada questão permanece na tela até a pessoa escolher continuar, sem avanço automático ou tempo de resposta.
 
-```json
-{
-  "id": "objetivo-inicial",
-  "kind": "content",
-  "title": "Título da etapa revisada",
-  "blocks": [{"type": "text", "text": "Conteúdo a desenvolver e revisar."}]
-}
-```
+As etapas anteriores podem ser revisitadas; atividades aprovadas mantêm o resultado e disponibilizam as explicações. O progresso de etapas e os resultados concluídos ficam somente no localStorage deste navegador, vinculados ao ID e à versão do curso. Uma atividade em andamento é reiniciada se a página for atualizada antes do resultado. Não há envio das respostas do curso ao banco da pesquisa. Se o armazenamento estiver indisponível, a jornada funciona durante a visita e informa essa limitação.
 
-Em `course.exam`, a futura prova terá `minScore` (fração maior que 0 e até 1) e `questions`. Cada questão deve ter `prompt`, `options`, `answer` (índice começando em zero) e `explanation`. A nota mínima não foi inventada nesta entrega: deverá ser definida junto à prova.
+`course.mjs` valida os metadados e referências. `learning.mjs` gera a página; `assets/lesson-player.mjs` coordena a jornada; `assets/course-activities.mjs` apresenta cenários, minijogo e avaliação; `assets/journey-model.mjs` verifica tentativas, desbloqueio e restauração de progresso. Os tipos de bloco disponíveis incluem text, highlight, cards, flashcards, accordion, steps, quiz, scenario, sort-game e checkpoint.
 
-O curso só pode passar a `published` se houver conteúdo e prova final válidos. O build reúne tudo em uma única rota `/curso/consumo-sustentavel/`, com a prova ao final. Não são geradas páginas separadas por módulo ou aula. A prova é obrigatória e a conclusão depende da nota definida. O progresso da jornada fica no navegador.
+As fontes de preparação estão no próprio curso: Ministério do Meio Ambiente, Story of Stuff, Prefeitura de Belo Horizonte e SINIR. Os links complementares não integram o tempo estimado. A versão do instrumento da pesquisa permanece independente da versão do curso.
 
-## Certificado
+O build reúne o curso em uma única rota. Para retirar temporariamente sua disponibilização, use `course.status: "draft"`; para mudanças de conteúdo que invalidem o progresso, incremente `course.version`. O certificado está habilitado após concluir todas as etapas e a avaliação final.
 
-O modelo será criado depois no Canva, conforme planejado. `course.certificate.status` permanece `planned`. Não há arquivo, botão de download ou emissão simulada. A emissão, os critérios de aprovação e os dados necessários ao certificado serão definidos quando o modelo estiver pronto.
+## Certificado em PDF sem registro nominal
+
+`course.certificate.status` é `enabled`. O formulário de nome completo aparece somente quando o estado da jornada, restaurado e validado, confirma a conclusão de todas as etapas e a aprovação na avaliação. Quem já concluiu a versão atual pode gerar o documento sem refazer o curso. Antes disso, o formulário permanece oculto e seus controles desabilitados.
+
+O participante informa o nome completo em um campo sem preenchimento automático. A validação aceita nomes com acentos, apóstrofos e hifens, em até 120 caracteres. O valor é normalizado e usado somente na memória da página; não é acrescentado ao estado da jornada, localStorage, sessionStorage, cookies, URL, logs ou banco de dados. O formulário não possui campos nominais de submissão nem endpoint de envio. A emissão não usa requisições de rede com o nome.
+
+O PDF é produzido integralmente no navegador, em uma página A4 horizontal, com a identidade visual do Além do Consumo. Inclui nome, curso, duração estimada de 10 minutos e data de emissão no fuso America/Sao_Paulo. O nome se ajusta ao espaço disponível. Não há assinatura fictícia, número de registro ou consulta pública de certificados. O documento informa que a emissão é automática e não possui registro nominal.
+
+Após gerar o arquivo, o campo é limpo. Ao sair da página, ele também é apagado; o arquivo temporário em memória é liberado após o início do download. O nome passa a existir apenas no PDF que o participante escolhe guardar. A própria interface explica essa diferença.
+
+`assets/certificate.mjs` desenha e inicia o download; `assets/certificate-pdf.mjs` monta o arquivo PDF; `assets/certificate-model.mjs` valida nome, data e condição de emissão. Não há nova biblioteca externa, serviço de emissão, cadastro ou migração de banco. `tests/certificate.test.mjs` verifica os critérios de liberação, validação do nome, fuso da data, isolamento do estado, ausência de chamadas de persistência/envio e estrutura do PDF.
 
 ## Arquivos ativos
 
@@ -157,7 +169,8 @@ O modelo será criado depois no Canva, conforme planejado. `course.certificate.s
 - `assets/sketches.svg`: ilustrações próprias, sem reutilizar as figuras da referência.
 - `script.js` e `assets/survey-model.mjs`: pesquisa e diálogos.
 - `assets/motion.js`: preferência para pausar animações.
-- `course.mjs`, `learning.mjs`, `assets/lesson-player.mjs`, `assets/journey-model.mjs`, `assets/journey.css`: futura jornada contínua e avaliação.
+- `course.mjs`, `learning.mjs`, `assets/lesson-player.mjs`, `assets/journey-model.mjs`, `assets/course-activities.mjs`, `assets/journey.css`: jornada contínua e avaliação.
+- `assets/certificate.mjs`, `assets/certificate-model.mjs`, `assets/certificate-pdf.mjs`, `assets/certificate.css`: emissão local do certificado e apresentação do formulário.
 - `build.mjs`: valida e gera somente as páginas e os recursos necessários.
 - `server.mjs`: prévia local.
 - `tests/compact.test.mjs`, `tests/survey.test.mjs`, `tests/course.test.mjs`: testes ativos desta versão.
